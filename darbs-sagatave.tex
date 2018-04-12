@@ -1,0 +1,291 @@
+\documentclass[12pt,paper=a4]{report}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{polyglossia}
+\setdefaultlanguage{latvian}
+\setotherlanguages{english,russian,french}
+\setmainfont[Mapping=tex-text]{Times New Roman}%{LMRoman10}
+% Fonts krievu valodai, kurā ir arī krievu valodas burti
+\newfontfamily\russianfont{Times New Roman}
+% Šos fontus tālāk izmantos chapter virsrakstos un url'os (lai būtu kirilicas burti)
+\newfontfamily\sffamily{Verdana}
+
+\usepackage{setspace}
+
+% lai varam normāli rakstīt apakšvītras
+\usepackage{underscore}
+% Lai varam iekļaut attēlus
+\usepackage{graphicx}
+% Kurā vietā tiks meklēti attēli - relatīvais ceļs attiecībā pret dokumentu
+\graphicspath{{./PNG/}{./images/internet/}{./images/self-generated/}}
+% Ar šiem PDF'ā būs saliktas saites un tām va uzlikt krāsu
+\usepackage{hyperref}
+\hypersetup{ colorlinks, citecolor=black, filecolor=black,linkcolor=black,urlcolor=black }
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{lipsum} %Lai ģenerētu nejaušus tekstus...
+\usepackage{listingsutf8}
+\usepackage{xcolor}
+
+%\usepackage{inconsolata}
+\lstset{
+    language=bash, %% Troque para PHP, C, Java, etc... bash é o padrão
+    basicstyle=\ttfamily\small,
+    numberstyle=\footnotesize,
+    numbers=left,
+    backgroundcolor=\color{gray!10},
+    frame=single,
+    tabsize=2,
+    rulecolor=\color{black!30},
+    title=\lstname,
+    escapeinside={\%*}{*)},
+    breaklines=true,
+    breakatwhitespace=true,
+    framextopmargin=2pt,
+    framexbottommargin=2pt,
+    extendedchars=false,
+    inputencoding=utf8
+}
+
+
+%% Mainīt chapteru izskatu - centrēts un definētais sffamily fonts (skatīt augstāk)
+\usepackage{titlesec}
+\titleformat{\chapter}{\huge\centering\sffamily}{\thechapter}{1pc}{}
+
+%% Pārdēvējam ``Literatūra`` par ``Izmantotās literatūras un avotu saraksts''.
+\addto\captionslatvian{
+\renewcommand\bibname{Izmantotās literatūras un avotu saraksts}
+}
+
+%% Atraitņrindiņas un bāreņrindiņas ( widow orphan) vadība
+\clubpenalty10000
+\widowpenalty10000
+
+%% Visādas atkāpes - 1" (2.54 cm) atkāpe jau ir pēc noklusējuma, šeit tikai korekcijas
+%\setlength{\parskip}{1line}
+\setlength{\topmargin}{0cm}
+\setlength{\headheight}{0in}
+\setlength{\headsep}{0in}
+\setlength{\textheight}{22.7cm}
+\setlength{\textwidth}{15cm}
+\setlength{\oddsidemargin}{0.5in}
+\setlength{\evensidemargin}{0.5in}
+%\setlength{\parindent}{0.25in}
+%\setlength{\parskip}{0.25in}
+
+%% uzliekam atkāpes arī nodaļu 1. rindkopas 1. rindai
+\usepackage{indentfirst}
+
+%Pārnesumiem - ļauj tiasīt lielākas starpas
+\hyphenpenalty=5000
+
+%% Nodaļu un apakšnodaļu numerācija
+\def\thechapter      {\arabic{chapter}.}
+\def\thesection      {\ifx\chapter\undefined{\arabic{section}.}\else  {\thechapter\arabic{section}.}\fi}
+\def\thesubsection   {\thesection\arabic{subsection}.}
+\def\thesubsubsection{\thesubsection\arabic{subsubsection}.}
+%\def\theparagraph    {\thesubsubsection\arabic{paragraph}.}
+%\def\thesubparagraph {\theparagraph\arabic{subparagraph}.}
+
+%% Pakotne lai saliktu automātisku figūru skaitīšanu
+\usepackage{totcount}
+
+\newcounter{nofappendices}
+\setcounter{nofappendices}{0}
+\regtotcounter{nofappendices}
+
+\newtotcounter{fignum}
+\def\oldfigure{} \let\oldfigure=\figure
+\def\figure{\stepcounter{fignum}\oldfigure}
+
+%defineejam atsauču skaitītāju
+\newtotcounter{citnum}
+\def\oldbibitem{} \let\oldbibitem=\bibitem
+\def\bibitem{\stepcounter{citnum}\oldbibitem}
+
+%% Attēlu numerācija
+\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}.}
+
+\input{src/titullapas-dati} %šeit pārdefinējam savus mainīgos (atstāju iepriekšējās rindas, lai varētu redzēt pārdefinēšanu)
+
+%% pievienota anotācijas noformēšana
+%\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+%\makeatletter
+%\patchcmd{\@makechapterhead}{\vspace*{50\p@}}{}{}{}% Removes space above \chapter head
+%\setafterchapterskip{1sp}
+%defineejam anotaacijas lapas, lai vareetu vienkaarshaak taas izmantot
+\def\abstract{
+  %\section*{\begin{center} \abstractname \end{center}} % start chapter
+
+\vspace*{-4\baselineskip}
+	\chapter*{\begin{center} \abstractname \end{center} } % start chapter
+	\vspace*{-2.5\baselineskip}
+  \addcontentsline{toc}{chapter}{\abstractname} % table of contents line
+  \markboth{\MakeUppercase{\abstractname}}{} % header mark
+}
+\def\endabstract{}%\clearpage
+
+%% Beidzot sākam rakstīt dokumentu
+\begin{document}
+
+%% Vislabāk nodaļas rakstīt kā atseviškus failus, kurus iekļauj ar input (.tex paplašinājums pats tiek pielikts klāt)
+% \input{src/mag-titullapa} %% visu titullapu ērtāk ir turēt datnē mag-titullapa.tex, bet te mēs tomēr visu rakstīsim vienā vietā:
+
+%%%% Titullapas sākums
+\input{src/titullapa} %pievienota titullapa, kura izveidota atsevišķā failā
+%%%% Titullapas beigas
+
+%%%% Satura rādītājs
+\tableofcontents
+
+%%%% 1.5 līiniju atstarpe starp rindām
+\onehalfspace
+
+{
+	\selectlanguage{latvian}
+	\begin{abstract}
+		
+		\begin{tabular}{@{}r@{}l@{}}
+			\parbox[c]{0.3\textwidth}{\textbf{The title:}}&
+			\parbox[t]{0.65\textwidth}{\defDarbaNosaukumsEN} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Autors:}}&
+			\parbox[t]{0.65\textwidth}{\defAutors} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Academic Advisor:}}&
+			\parbox[t]{0.65\textwidth}{\defZinVaditajs} \\
+			\parbox[c]{0.3\textwidth}{\textbf{The volume of the work:}}&
+			\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} pages, XX~tables,  \total{fignum}~images, XX~equations, \total{citnum}~literature sources, \total{nofappendices}~appendices} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Keywords:}}&
+			\parbox[t]{0.65\textwidth}{ Life, Universe, Questions, Philosophy} \\
+			&\\
+		\end{tabular}
+		%\total{nofimages} % ja nu gadiijumaa vajag custom counter
+		
+		In the first novel and radio series, a group of hyper-intelligent pan-dimensional beings demand to learn the \textbf{Answer to the Ultimate Question of Life} from the supercomputer, Deep Thought, specially built for this purpose. It takes Deep Thought 7½ million years to compute and check the answer, which turns out to be\textbf{ 42}.  Unfortunately, The Ultimate Question itself is unknown.\cite{wiki-en}
+		
+	\end{abstract}
+}
+
+%%%% 1.5 līiniju atstarpe starp rindām
+\onehalfspace
+{
+\selectlanguage{english}
+\begin{abstract}
+
+\begin{tabular}{@{}r@{}l@{}}
+\parbox[c]{0.3\textwidth}{\textbf{The title:}}&
+\parbox[t]{0.65\textwidth}{\defDarbaNosaukumsEN} \\
+\parbox[c]{0.3\textwidth}{\textbf{Author:}}&
+\parbox[t]{0.65\textwidth}{\defAutors} \\
+\parbox[c]{0.3\textwidth}{\textbf{Academic Advisor:}}&
+\parbox[t]{0.65\textwidth}{\defZinVaditajs} \\
+\parbox[c]{0.3\textwidth}{\textbf{The volume of the work:}}&
+\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} pages, XX~tables,  \total{fignum}~images, XX~equations, \total{citnum}~literature sources, \total{nofappendices}~appendices} \\
+\parbox[c]{0.3\textwidth}{\textbf{Keywords:}}&
+\parbox[t]{0.65\textwidth}{ Life, Universe, Questions, Philosophy} \\
+&\\
+\end{tabular}
+%\total{nofimages} % ja nu gadiijumaa vajag custom counter
+
+In the first novel and radio series, a group of hyper-intelligent pan-dimensional beings demand to learn the \textbf{Answer to the Ultimate Question of Life} from the supercomputer, Deep Thought, specially built for this purpose. It takes Deep Thought 7½ million years to compute and check the answer, which turns out to be\textbf{ 42}.  Unfortunately, The Ultimate Question itself is unknown.\cite{wiki-en}
+
+\end{abstract}
+}
+\setcounter{secnumdepth}{7}
+%%%% Nodaļa bez numerācijas
+\chapter*{Izmantotie saīsinājumi un termini}
+\addcontentsline{toc}{chapter}{Izmantotie saīsinājumi un termini}
+
+%%%  Sākas nodaļas
+\input{src/ch-ievads} %% Ērtāk visu ir rakstīt atsevišķos failos - ievads.tex un tad tos iekļaut ar input komandu
+
+\chapter{Mašīnmācīšanās}
+\section{Mākslīgie neironu tīkli}
+\subsection{Dziļā mašīnmācīšanās}
+\subsection{Konvolūcijas neironu tīkli}
+kapēc CNN, pielietojums
+\subsubsection{Tīklu slāņi}
+%\paragraph{title1}
+%\paragraph{title2}
+%\paragraph{title3}
+%\paragraph{title4}
+\subsubsection{Tīklu arhitektūras}
+%\paragraph{title1}
+%\paragraph{title2}
+%\paragraph{title11}
+%\paragraph{title22}
+\subsubsection{Tīklu apmācība}
+\chapter{Detektēšana un sekošana}
+aprakstīt kapēc detektēt un trackot, kapēc nevar tikai detektēt
+\section{Detektēšana}
+\subsection{SSD}
+\subsection{YOLO}
+\subsection{Faster R-CNN}
+\section{Sekošana}
+\subsection{AdaBoost}
+\subsection{Multiple Instance Learning}
+\subsection{Kernelized Correlation Filters}
+\subsection{SiamFC}
+\chapter{Implementācija}
+\section{Datu sagatavošana}
+\section{Detektēšana}
+\subsection{caffe}
+\subsubsection{Tīklu apmācība}
+\subsubsection{Detektēšana}
+\paragraph{SSD}
+\paragraph{Faster R-CNN}
+\subsection{darknet}
+\subsubsection{Tīklu apmācība}
+\subsubsection{Detektēšana izmantojot YOLO}
+\section{Sekošana}
+\subsection{OpenCV sekošanas programmējamā saskarne (API)}
+\subsection{SiamFC}
+\input{src/secinajumi-un-priekslikumi} %% Ērtāk visu failā secinajumi-un-priesklikumi.tex
+
+\bibliographystyle{unsrt}
+\selectlanguage{latvian}
+\bibliography{src/links,src/articles,src/books}	%to load the *.bib files ../articles,../books,
+\addcontentsline{toc}{chapter}{Izmantotās literatūras un avotu saraksts}
+
+
+\chapter*{Galvojums}
+\addcontentsline{toc}{chapter}{Galvojums}
+ Ar šo es, \defAutors, galvoju, ka maģistra darbs ir izpildīts patstāvīgi un bez citu palīdzības. No svešiem pirmavotiem ņemtie dati un definējumi ir uzrādīti darbā. Šis darbs tādā vai citādā veidā nav nekad iesniegts nevienai citai pārbaudījumu komisijai un nav nekur publicēts.
+
+\vspace{1in}
+\defGads.gada \rule{1cm}{0.2pt}.\rule{3cm}{0.2pt}
+\label{LastPage}
+
+%% Te vajadzētu pielikumus
+\appendix
+\chapter{Pirmais pielikums}
+
+\addtocounter{nofappendices}{1}
+\label{appendix:tituldati}
+%\lstinputlisting[firstline=6, lastline=15]{../codes/calcHomogInfModel.m}
+\lstinputlisting[firstline=18, lastline=25]{README.md}
+
+\chapter{Otrais pielikums}
+
+\addtocounter{nofappendices}{1}
+\label{appendix:tituldati2}
+\lstinputlisting{README.md}
+
+%% Vēl jāpievieno atzīmes lapa
+\pagebreak
+%% Šai lapai nevajag numerāciju
+\pagestyle{empty}
+\begin{center}
+ Maģistra darbs aizstāvēts Valsts pārbaudījumu komisijas sēdē\\
+ \vspace{1em}
+\end{center}
+\defGads.gada \rule{1cm}{0.2pt} . \rule{3cm}{0.2pt}\\\\
+un novērtēts ar atzīmi \rule{4cm}{0.2pt} \\\\\\
+Protokols Nr. \rule{1cm}{0.2pt}\\\\\\
+Valsts pārbaudījumu komisijas \\\\
+priekšsēdētājs \rule{7cm}{0.2pt}.\\
+\hspace*{5cm}\textit{\raisebox{1em}{paraksts}}
+
+
+\end{document}
