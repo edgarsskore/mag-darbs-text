@@ -4,6 +4,8 @@
 \usepackage{xltxtra}
 \usepackage{polyglossia}
 \setdefaultlanguage{latvian}
+\usepackage{fixlatvian}
+
 \setotherlanguages{english,russian,french}
 \setmainfont[Mapping=tex-text]{Times New Roman}%{LMRoman10}
 % Fonts krievu valodai, kurā ir arī krievu valodas burti
@@ -81,11 +83,11 @@
 %Pārnesumiem - ļauj tiasīt lielākas starpas
 \hyphenpenalty=5000
 
-%% Nodaļu un apakšnodaļu numerācija
-\def\thechapter      {\arabic{chapter}.}
-\def\thesection      {\ifx\chapter\undefined{\arabic{section}.}\else  {\thechapter\arabic{section}.}\fi}
-\def\thesubsection   {\thesection\arabic{subsection}.}
-\def\thesubsubsection{\thesubsection\arabic{subsubsection}.}
+%% Nodaļu un apakšnodaļu numerācija tagad to veic fixlatvian package
+%\def\thechapter      {\arabic{chapter}.}
+%\def\thesection      {\ifx\chapter\undefined{\arabic{section}.}\else  %{\thechapter\arabic{section}.}\fi}
+%\def\thesubsection   {\thesection\arabic{subsection}.}
+%\def\thesubsubsection{\thesubsection\arabic{subsubsection}.}
 %\def\theparagraph    {\thesubsubsection\arabic{paragraph}.}
 %\def\thesubparagraph {\theparagraph\arabic{subparagraph}.}
 
@@ -106,7 +108,7 @@
 \def\bibitem{\stepcounter{citnum}\oldbibitem}
 
 %% Attēlu numerācija
-\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}.}
+%\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}.}
 
 \input{src/titullapas-dati} %šeit pārdefinējam savus mainīgos (atstāju iepriekšējās rindas, lai varētu redzēt pārdefinēšanu)
 
@@ -192,7 +194,7 @@ In the first novel and radio series, a group of hyper-intelligent pan-dimensiona
 
 \end{abstract}
 }
-\setcounter{secnumdepth}{7}
+
 %%%% Nodaļa bez numerācijas
 \chapter*{Izmantotie saīsinājumi un termini}
 \addcontentsline{toc}{chapter}{Izmantotie saīsinājumi un termini}
@@ -201,21 +203,59 @@ In the first novel and radio series, a group of hyper-intelligent pan-dimensiona
 \input{src/ch-ievads} %% Ērtāk visu ir rakstīt atsevišķos failos - ievads.tex un tad tos iekļaut ar input komandu
 
 \chapter{Mašīnmācīšanās}
-\section{Mākslīgie neironu tīkli}
-\subsection{Dziļā mašīnmācīšanās}
-\subsection{Konvolūcijas neironu tīkli}
-kapēc CNN, pielietojums
-\subsubsection{Tīklu slāņi}
-%\paragraph{title1}
-%\paragraph{title2}
-%\paragraph{title3}
-%\paragraph{title4}
-\subsubsection{Tīklu arhitektūras}
-%\paragraph{title1}
-%\paragraph{title2}
-%\paragraph{title11}
-%\paragraph{title22}
-\subsubsection{Tīklu apmācība}
+Mašīnmācīšanās algoritmi ir kļuvuši par neatņemamu sastāvdaļu programmatūras izstrādātājiem un kompānijām, kas savas aplikācijas grib padarīt "gudras". Lai arī cik, mūsdienās, šis jēdziens ir kļuvis populārs, oficiāla mašīnmācīšanās definīcija nav noteikta. Visvienkāršākais mašīnmācīšanās pielietojums ir apstrādāt datus, mācīties no tiem un no iegūtajiem rezultātiem pieņemt lēmumus vai veikt minējumus reālās pasaules problēmu risināšanai. Tā vietā, lai manuāli veidotu programmatūras risinājumus, kas veic kādu uzdevumu, tiek apmācīti datori vai citas ierīces, izmantojot lielus datu apjomus. 
+\section{Pamatjēdziens}
+Pasaulē ir daudz un dažādi mašīnmācīšanās algoritmi un katru dienu tiek publicēti simtiem jaunu algoritmu. Tos var sagrupēt pēc apmācības veida (vadītā apmācība (\textit{supervised learning}), nevadītā apmācība (\textit{unsupervised learning}), pusvadītā apmācība (\textit{semi-supervised learning})) kā arī pēc formas vai funkcijas līdzībām (klasifikācija, regresija, lēmumu koki (\textit{decision trees}), klasterēšana (\textit{clustering}), dziļā mašīnmācīšanās (\textit{deep learning})). Neatkarīgi no apmācības veida vai pielietojuma, visas mašīnmācīšanās algoritmu kombinācijas sastāv no klasifikatoriem (atbalsta vektora mašīna, lēmuma koki, neironu tīkli), vērtēšanas funkcijām (varbūtības funkcijas, robežfunkcijas, izmaksu funkcija) un optimizācijas funkcijām (mantkārīgā meklēšana, nepārtrauktās optimizācijas metodes (\textit{continuous optimization})). Izmantojot šīs sastāvdaļas, mašīnmācīšanās algoritmu pamata mērķis ir būt spējīgam funkcionēt ne tikai ar apmācībā piedāvātajiem datiem, bet arī spēt darboties ar datiem, ar kuriem algoritms nav saskāries. 
+
+Atkarībā no veicamā uzdevuma, ir dažādi veidi kā panākt, lai datori vai jebkura cita ierīce mācās, sākot ar visparastākajiem lēmumu kokiem, beidzot ar ģenētiskajiem algoritmiem un mākslīgajiem neironu tīkliem. Lēmumu koki atspoguļo reālās dzīves koka struktūru un tos izmanto gan klasifikācijas, gan regresijas problēmu risināšanā. Analizējot datus, lēmumu kokus var izmantot, lai vizuāli aprakstītu lēmumus un lēmumu pieņemšanu. Mašīnmācīšanās gadījumā, lēmumu kokus apraksta kā klasifikācijas kokus vai regresijas kokus (\textit{CART - Classification and Regression Trees}), atkarībā no veicamā uzdevuma. Galvenā šo koku doma ir audzēt zarus, pieņemot lēmumus, kuras koka īpašības izvēlēties, zinot apstāšanās nosacījumu. \cite{dectree}
+
+Ģenētiskie algoritmi ir vēl viens algoritmu veids, kuru ir vērts izcelt. Tie ir algoritmi, kuri tiek izveidoti, balstoties uz notikumiem, kurus novēro dabīgajos evolūcijas procesos. Datorzinātnē ģenētiskie algoritmi ir optimizācijas algoritmi, kuri prot patstāvīgi apgūt jaunu informāciju, balstoties uz evolūcijas jēdzieniem kā dabīgā atlase un ģenētika. Ģenētisko algoritmu pamatideja ir simulēt Čārlza Dārvina piedāvāto teorēmu "izdzīvo stiprākais". Risinot problēmu, ģenētiskais algoritms saglabā tikai spēcīgākos indivīdus katrā paaudzē. Šie indivīdi sacenšas par resursiem un iespēju veidot nākamo paaudzi. Jaunās paaudzes tiek veidotas izvēloties vecākus no iepriekšējās paaudzes, veicot \textit{crossover} operāciju un mutāciju. Spēcīgākie indivīdi katrā paaudzē izveidos vairāk pēcnācēju nekā vājie indivīdi, tādējādi katra nākamā indivīdu paaudze kļūs labāka, galu galā iegūstot labāko rezultātu problēmas risināšanai. Beigu nosacījumu nosaka pirms algoritma izpildes, parasti, tiek noteikts paaudžu skaits vai kāds labāko indivīdu rezultātu slieksnis, kuru pēcnācēju paaudze pārsniedz. Ģenētiskie algoritmi gan nespēj risināt klasifikācijas problēmas, bet tos lieto kā optimizācijas funkciju. Lai rēķinātu neironu tīklu svarus, var izmantot ģenētiskos algoritmus. \cite{genalg}
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=6cm]{images/gen-algo-bilde.png} %
+	\caption{Ģenētisko algoritmu modelis}%
+	\label{fig:example}%
+\end{figure}
+
+Mākslīgie neironu tīkli ir viena no populārākajām mašīnmācīšanās izmantotajām metodēm. Tas ir neapstrādāts elektronisks modelis, kas balstīts uz smadzeņu bioloģisko neironu tīklu. Var teikt, ka šāda neironu tīkla modelis, līdzīgi kā smadzenes, mācās no pieredzes. Teorētiski, šādu smadzeņu modelēšana, paredz, ka šāds mašīnmācīšanās risinājums, neprasa dziļas tehniskas zināšanas bioloģijā vai datorzinātnē, bet ir jāspēj tīklu izveidot pareizi kopā saliekot vairākas slāņu kārtas. Šādas, bioloģijas iedvesmotas metodes uzskata par nākamo lielo soli datorzinātnes industrijā.\cite{staff} \par
+Iedziļinoties mākslīgo neironu tīklu uzbūvē, neironu tīkls sastāv no daudz, savstarpēji savienotiem mezgliem, kur katrs no mezgliem veic kādu matemātisku operāciju. To, ko atgriež katrs mezgls, nosaka matemātiskā operācija, ko šis mezgls veic kā arī citi parametri, kas specifiski šim mezglam. Šie mezgli galu galā tiek grupēti un šos mezglu grupējumus sauc par slāņiem (no ang. val. - \textit{layer}). \par
+Mākslīgie neironu tīkli satur sava veida "mācīšanās likumus", kas ir process, kad tiek mainīti mezglu savienojumu svari atkarībā no informācijas ievadē. 
+Kad neironu tīkls ir apmācīts tik tālu, ka lietotājs ir apmierināts, tad tīklam var sākt piedāvāt datus, kuri tad iziet cauri visiem slāņiem, tādā veidā turpinot mācības uz sākumā izveidotā modeļa bāzes. Neironu tīklus ir arī iespējams pārtrenēt, kas nozīmē, ka tīkls atpazīst tikai vienu ienākošo datu tipu. Ja tā notiek, tad mācīšanās vairs nav iespējama. Mākslīgos neironu tīklus izmanto dažādu problēmu risināšanai, dažādās apakšnozarēs un šī darba nolūkos autors neironu tīklus izmantos dziļajai apmācībai.
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=5cm]{images/neironutikls.png} %
+	\caption{Vienkāršs neironu tīkla modelis}%
+	\label{fig:example}%
+\end{figure}
+\section{Dziļā mašīnmācīšanās}
+Mašīnmācīšanās no dziļās mašīnmācīšanās atšķiras ar to, ka mašīnmācīšanās ir sarežģīti izmantot ļoti lielas datu kopas, taču ar dziļās apmācības metodēm tas ir iespējams. Dziļās mašīnmācīšanās metodes atgriež jebkādas vērtības sākot ar skaitliskām vērtībām, beidzot ar elementiem kā attēli, teksts vai skaņa, taču parastās mašīnmācīšanās metodes spēj atgriezt tikai skaitliskas vērtības kā, piemēram, klasifikācijas indeksu vai kādas funkcijas rezultātu. Mašīnmācīšanās izmanto dažādus automatizētus algoritmus, kas iemācās modeļa funkcijas un paredz nākotnes darbības no padotajiem datiem, kamēr dziļā apmācībā izmanto neironu tīklus, kas laiž datus caur daudz apstrādes slāņiem, lai izšķirtu datu īpašības. Lielākā atšķirība, pēc autora domām, starp mašīnmācīšanos un dziļo mašīnmācīšanos ir tajā, ka dziļās mašīnmācīšanās metodes automātiski datos atrod svarīgās īpašības, kamēr mašīnmācīšanās algoritmos šīs īpašības ir manuāli jānorāda. 
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=7cm]{images/deeplearning.png} %
+	\caption{Mašīnmācīšanās un dziļās mašīnmācīšanās salīdzinājums}%
+	\label{fig:example}%
+\end{figure}
+Dziļā mašīnmācīšanās ļauj apmācīt matemātiskus modeļus, kas izveidoti no vairākiem datu apstrādes slāņiem, ar datiem, kas attēloti kā vairāku līmeņu abstrakcija (pētamā objekta galveno īpašību izdalīšana un mazsvarīgu aspektu ignorēšana). Šīs metodes ir uzlabojušas jaunākās tehnoloģijas balss atpazīšanā, objektu atpazīšanā attēlos, objektu detektēšanā. Dziļā mašīnmācīšanās, izmantojot atpakaļdatošanas algoritmus, sarežģītās datu kopu struktūrās meklē kā datoram vai jebkurai citai ierīcei būtu jāmaina iekšējie parametri starp tīklu slāņiem.
+
+Īpašību apmācība ir metožu kopums, kas atļauj ierīcei padot neapstrādātus datus un automātiski iegūt īpašības, kas nepieciešamas, lai veiktu detektēšanu vai klasifikāciju. Dziļās mašīnmācīšanās metodes ir īpašību apmācības metodes ar vairākiem īpašību slāņiem, kurus iegūst apvienojot vienkāršus, taču nelineārus modeļus, kur katrs modelis pārveido īpašību no viena līmeņa uz augstāku, abstraktāku līmeni. Veicot pietiekami daudz šādus pārveidojumus, algoritmiem ir iespējams iemācīties ļoti sarežģītas darbības.\cite{deepnet} Darba ietvaros, objektu detektēšanai tiks izmantots konvolūciju neironu tīkls (\textit{CNN}), kas ir dziļās mašīnmācīšanās tips.
+
+\section{Konvolūcijas neironu tīkli}
+Konvolūcijas neironu tīkli (turpmāk \textit{CNN}) ir izveidoti, lai apstrādātu datus, kas ievadei padoti kā vairāki masīvi, piemēram, divdimensiju masīvi, kas satur pikseļu intensitātes vairākos krāsu kanālos (attēls). Vairākus datu veidus vienkāršojot, tos var izteikt kā masīvus: viendimensijas masīvs priekš signāliem vai skaitļu rindām, divdimensiju masīvi attēliem vai audio spektogrammām un trīsdimensiju masīvs video. Vislabāko rezultātu CNN tīklu veidi sasniedz risinot objektu detektēšanas, segmentācijas vai klasifikācijas problēmas.
+
+Līdzīgi parastajiem neironu tīkliem arī konvolūciju neironu tīkli ir izveidoti no vairākiem slāņiem.
+
+\subsection{Tīklu slāņi}
+\subsubsection{title1}
+\subsubsection{title2}
+\subsubsection{title3}
+\subsubsection{title4}
+\subsection{Tīklu arhitektūras}
+\subsubsection{title1}
+\subsubsection{title2}
+\subsubsection{title11}
+\subsubsection{title22}
+\subsection{Tīklu apmācība}
+
 \chapter{Detektēšana un sekošana}
 aprakstīt kapēc detektēt un trackot, kapēc nevar tikai detektēt
 \section{Detektēšana}
