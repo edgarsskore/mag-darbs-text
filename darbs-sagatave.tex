@@ -274,7 +274,7 @@ Konvolūcijas slānis ir CNN galvenā sastāvdaļa. Kā jau no nosaukuma var nop
 	\end{figure}
 \end{itemize}
 \subsubsection{Nelinearitātes slānis}
-Nelinearitātes slānis konvolūciju neironu tīklos satur aktivizācijas funkciju, kas ņem no konvolūcijas operācijas atgriezto īpašību karti un izveido aktivizācijas karti. Aktivizācijas funkcija veic matricas elementu reizinājumu izmantojot saņemtos datus, kas nozīmē, ka tiek izvadīts tik pat liels masīvs, cik bija saņemts ievadē. Aktivizācijas funkciju tradicionāli implementē kā sigmoīdu vai hiperbolisku tangensa funkciju. Nesenāki pētījumi gan norāda, ka konvolūcijas neironu tīklos rektificētas lineārās vienības (no angļu val. \textit{rectified linear units}) (ReLUs) strādā labāk kā tradicionālās aktivizācijas funkcijas \cite{nair2010rectified}. 
+Nelinearitātes slānis konvolūciju neironu tīklos satur aktivizācijas funkciju, kas ņem no konvolūcijas operācijas atgriezto īpašību karti un izveido aktivizācijas karti. Aktivizācijas funkcija veic matricas elementu reizinājumu izmantojot saņemtos datus, kas nozīmē, ka tiek izvadīts tik pat liels masīvs, cik bija saņemts ievadē. Aktivizācijas funkciju tradicionāli implementē kā sigmoīdu vai hiperbolisku tangensa funkciju un tās galvenais mērķis ir novērst linearitāti. Nesenāki pētījumi gan norāda, ka konvolūcijas neironu tīklos rektificētas lineārās vienības (no angļu val. \textit{rectified linear units}) (ReLUs) strādā labāk kā tradicionālās aktivizācijas funkcijas \cite{nair2010rectified}. 
 \begin{figure}[h]%
 	\centering
 	\includegraphics[height=4cm]{images/sigmoidhiperbol.png} %
@@ -290,8 +290,29 @@ Rektificētās lineārās vienības (ReLUs) ir speciāla implementācija, kas ap
 	\caption{Rektificēta lineāra vienība}%
 	\label{fig:example}%
 \end{figure}
-\subsubsection{title3}
-\subsubsection{title4}
+
+Konvolūcijas neironu tīklos, ReLUs ir trīs nozīmīgas priekšrocības pār tradicionālajām loģistikas funkcijām (sigmoīds) vai hiperboliskajām tangensa aktivizācijas funkcijām:
+\begin{itemize}
+	\item ReLUs efektīvi izplata gradientu, kas samazina iespēju saskarties ar gradienta izzušanas problēmu, kas ir parasta problēma dziļajās neironu tīklu arhitektūrās \cite{hochreiter1998vanishing}.
+	\item Īpašības karšu negatīvās vērtības, rektifikācijas lineārā vienība pārveido par nullēm, tādējādi tiekot galā ar anulēšanas problēmu (no angļu val. \textit{cancellation problem}) kā arī izvadē iegūtā aktivizācijas karte saturēs daudz izsētāku vērtību apjomu. Šāds vērtību izkaisījums nodrošina stabilitāti gadījumā, ja ievadē notiek nelielas izmaiņas, piemēram, troksnis\cite{glorot2011deep}. 
+	\item Ņemot vērā skaitļošanas sarežģītību, ReLUs sastāv no ļoti vienkāršām operācijām, kas nozīmē, ka šīs operācijas smagi neietekmē CNN veiktspēju, kas padara to implementēšanu konvolūcijas neironu tīklos ļoti efektīvu.
+\end{itemize}
+Šo priekšrocību dēļ, lielākā daļa jaunāko konvolūcijas neironu tīklu arhitektūru, piemēram, \cite{krizhevsky2012imagenet}\cite{DBLP:journals/corr/HeZR015}\cite{simonyan2014very}, izmanto tieši rektificētās lineārās vienības kā aktivizācijas funkciju nelinearitātes slānī.
+\subsubsection{Apvienošanas slānis}
+Apvienošanas slāņa (no angļu val. \textit{pooling layer}) galvenā funkcija ir samazināt aktivizāciju karšu dimensiju skaitu. Lai samazinātu iespēju pārlieku apmācīt tīklus (no angļu val. \textit{overfitting}) un samazinātu nepieciešamos skaitļošanas resursus, visbiežāk, šis slānis tiek pielietots pēc vairāk citu slāņu operāciju veikšanas (piemēram, pēc vairākiem konvolūcijas un aktivizācijas slāņiem). Apvienošanas operācijas mērķis ir saglabāt jau atrastās īpašības mazākā attēlojumā. Šis mērķis tiek sasniegts atmetot mazsvarīgos datus, lai iegūtu labāku telpisko izšķirtspēju. 
+
+Apvienošanas slānī tiek definēts filtrs, kurš katrā operācijas solī tiks reducēts līdz vienai vērtībai. Līdzīgi kā konvolūcijas slānī, tiek izvēlēts solis pēc cik pozīcijām atkal tiks pielietots apvienošanas filtrs. Kad filtrs ir izmantots visām iespējamajām masīva pozīcijām, izvadē tiek iegūta telpiski samazināta aktivizācijas karte.
+
+Visbiežāk izmantotās redukcijas metodes ir maksimumu apvienošana vai vidējās vērtības apvienošana. Maksimuma apvienošanas filtri meklē vislielāko vērtību filtra reģionā un atmet pārējās vērtības. Vidējās vērtības apvienošanas filtri saglabā filtr reģiona vidējo vērtību. Maksimuma apvienošana demonstrē spēju ātrāk konverģēt salīdzinājumā ar vidējās vērtības apvienošanu un citām metodēm, tāpēc to izmanto visbiežāk \cite{scherer2010evaluation}. 
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=3cm]{images/maxpool.png} %
+	\caption{Vienkāršs maksimuma apvienošanas slāņa modelis \cite{maxpool}}%
+	\label{fig:example}%
+\end{figure}
+\subsubsection{Pilnīgi savienotais slānis}
+Pilnīgās savienošanas slānis kā ievades datus saņem konvolūcijas, aktivizācijas vai apvienošanas slāņu izvadi un atgriež \textit{N} dimensiju vektoru, kur \textit{N} ir neironu tīklam piedāvāto klašu skaits. Šis klašu jeb atšķirīgu detektējamo objektu skaits ir jādefinē pirms tīkla apmācības. Iepriekš minētais vektors saturēs informāciju par to cik ļoti katrs aktivizācijas kartes elements korelē ar definētajām klasēm. Piemēram, ja tīklam ievadē ir padots attēls ar cilvēku, aktivizācijas kartē būs augstas vērtības īpašībām, kas raksturo, ka objektam ir divas rokas un kājas. 
+
 \subsection{Tīklu arhitektūras}
 \subsubsection{title1}
 \subsubsection{title2}
