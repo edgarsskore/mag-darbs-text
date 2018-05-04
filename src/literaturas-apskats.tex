@@ -55,4 +55,32 @@ Lai gan \textit{YOLO} ir labs un ātrs risinājums objektu detektēšanā, tam i
 \end{itemize}   
 
 \subsubsection{Faster-RCNN (\textit{Faster Region-Based Convolutional Neural Network})}
-\textit{Faster-RCNN} ir objektu detektēšanas sistēma, kas sastāv no diviem tīkliem: reģionu piedāvāšanas tīkla (no angļu val. \textit{region proposal network}) jeb RPN, kas veido reģionu priekšlikumus, kurus tālāk piedāvā citam tīklam, kas šiem reģioniem veic objektu detektēšanu. RPN atgriež vairākus logus jeb priekšlikumus, kurus novērtēs klasifikators un regresors, lai noteiktu objektu esamību konkrētajā logā. Tīkls prognozē varbūtību, ka reģionu logs ir fons vai priekšplāns un precizē reģiona loga izmērus. 
+\textit{Faster-RCNN} ir objektu detektēšanas sistēma, kas sastāv no diviem tīkliem: reģionu noteikšanas tīkla (no angļu val. \textit{region proposal network}) jeb RPN, kas veido reģionu priekšlikumus, un no tīkla, kas šiem reģioniem veic objektu detektēšanu. RPN atgriež vairākus logus jeb priekšlikumus, kurus novērtēs klasifikators un regresors, lai noteiktu objektu esamību konkrētajā logā.
+
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=3.5cm]{images/fastercnnarch.png} %
+	\caption{\textit{Faster R-CNN} arhitektūra \cite{fasterrcnn}}%
+	\label{fig:example}%
+\end{figure}
+\textit{Faster R-CNN} sistēmai ir salīdzinoši sarežģīta arhitektūra. Neiedziļinoties sīkumos, šī modeļa arhitektūra (attēls 2.3) sākas ar attēlu no kura ir nepieciešams iegūt: sarakstu ar ierobežojošajiem logiem, katram loga marķējumu (klases nosaukums) un katra marķējuma un ierobežojošā loga varbūtību. 
+
+Ievades attēls ir vairākdimensiju masīvs, kuru padod ievadē konvolūcijas neironu tīklam līdz tiek iegūta īpašību karte. Pēc īpašību kartes iegūšanas, tā tiek nodota RPN. Izmantojot šīs īpašības, tīkls meklē iepriekš definētu skaitu ar reģioniem (ierobežojošajiem logiem), kuri var saturēt objektus (RPN nav svarīgi noskaidrot kādas klases objekts atrasts, tikai vai reģionā ir kāds objekts vai reģions satur tikai fona informāciju).  Šie reģionu logi ir fiksēta izmēra ierobežojošie logi, kuri ir vienmērīgi izvietoti attēla robežās. Pēc tam kad iegūts saraksts ar iespējamiem objektiem un to atrašanās vietām attēlā, detektēšanas problēma paliek krietni vienkāršāka. Izmantojot no konvolūcijas neironu tīkla iegūtās īpašību kartes un reģionu logus ar atbilstošajiem objektiem, pielieto RoI (no angļu val. Region of Interest) apvienošanu.
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=5cm]{images/rpnstep.png} %
+	\caption{RPN arhitektūra. RPN ievadē saņem no CNN atgriezto īpašību karti un attēlā ģenerē reģionu priekšlikumus. \cite{rpnarch}}%
+	\label{fig:example}%
+\end{figure}
+Pēc RPN soļa ir iegūti vairāki prognozētie objekti, taču nav zināms kāda ir šo objektu klase. Vienkāršākais veids kā katram reģionam atrast klasi ir, samazināt šo reģionu un padot apmācītam tīklam, kas izmantojot iepriekš iegūtās attēla īpašības varēs risināt klasifikācijas problēmu, taču šāds risinājums nav efektīvs. Lai veiktu šāda veida klasifikāciju 1000 priekšlikumiem, tiks patērēts daudz laika un skaitļošanas resursu. Šo problēmu, \textit{Faster R-CNN} izstrādātāji risina vai vismaz samazina, izmantojot RoI apvienošanu \cite{roipooling}, ņemot iepriekš iegūto īpašību karti un iegūtos reģionus. 
+
+Pēc RoI apvienošanas soļa seko R-CNN daļa, kas klasificē reģionu logu saturu vai arī atmet to, norādot reģiona marķējumā, ka tas ir fons. Kā arī R-CNN tīkls atjauno reģionu ierobežojošo logu koordinātes, lai ierobežojošais logs precīzāk pārklātu objektu. R-CNN izmanto katra piedāvātā reģiona īpašību karti, saplacina (no angļu val. \textit{flattens}) to un izmanto divus pilnīgās savienošanas slāņus ar ReLU kā aktivizācijas funkciju un atgriež objekta varbūtību un atjaunotā ierobežojošā loga robežas.
+
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=5cm]{images/rcnnarch.png} %
+	\caption{R-CNN arhitektūra \cite{fasterrcnn}}%
+	\label{fig:example}%
+\end{figure}
+
+Līdzīgi kā pēc RPN soļa, pēc R-CNN soļa ir iegūti objekti, kuriem ir atrastas klases un kurus ir nepieciešams papildus apstrādāt. Lai  katram reģionam pielietotu ierobežojošo logu labojumus, tiek ņemts vērā kuras klases atrastā varbūtība bija ar visaugstāko vērtību (ja reģiona augstākā varbūtība ir klase "fons", tad šis reģions tiek ignorēts). Pēc gala objektu iegūšanas un "fona" objektu atmešanas, tiek pielietots uz klasēm balstīts NMS (\textit{non-maximum suppression}), lai novērstu vienas un tās pašas objekta instances detektēšanu vairākos reģionos \cite{hosang2017learning}.
