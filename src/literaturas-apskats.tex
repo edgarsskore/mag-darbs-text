@@ -1,5 +1,4 @@
 \chapter{Literatūras apskats}
-
 Ir aprakstītas vairākas metodes, lai veiktu cilvēku plūsmu analīzi attēlos un video fragmentos \cite{brostow2006unsupervised,chen2013cumulative,ge2009marked,chen2015person,lempitsky2010learning}. Vispārīgi, pirmie pētījumi tika vērsti uz detektēšanas veida izvēli un vai problēmu var risināt izmantojot segmentācijas metodes \cite{tu2008unified}. Šīs metodes nelabvēlīgi ietekmēja objektu nostāšanās vienam aiz otra, objektu pazušana un nekārtīgs (pārblīvēts TODO pārbaudīt tulkojumu (high clutter background)) fons attēlos. Jaunākos risinājumus var vispārīgi sadalīt trīs kategorijās: risinājumi, kas balstīti uz regresiju, risinājumi, kas balstīti uz pūļa blīvuma novērtējumu un risinājumi, kas balstīti uz konvolūcijas neironu tīkliem. 
 
 \subsubsection{Risinājumi, kas balstīti uz regresiju}
@@ -65,7 +64,7 @@ Lai gan \textit{YOLO} ir labs un ātrs risinājums objektu detektēšanā, tam i
 \end{figure}
 \textit{Faster R-CNN} sistēmai ir salīdzinoši sarežģīta arhitektūra. Neiedziļinoties sīkumos, šī modeļa arhitektūra (attēls 2.3) sākas ar attēlu no kura ir nepieciešams iegūt: sarakstu ar ierobežojošajiem logiem, katram loga marķējumu (klases nosaukums) un katra marķējuma un ierobežojošā loga varbūtību. 
 
-Ievades attēls ir vairākdimensiju masīvs, kuru padod ievadē konvolūcijas neironu tīklam līdz tiek iegūta īpašību karte. Pēc īpašību kartes iegūšanas, tā tiek nodota RPN. Izmantojot šīs īpašības, tīkls meklē iepriekš definētu skaitu ar reģioniem (ierobežojošajiem logiem), kuri var saturēt objektus (RPN nav svarīgi noskaidrot kādas klases objekts atrasts, tikai vai reģionā ir kāds objekts vai reģions satur tikai fona informāciju).  Šie reģionu logi ir fiksēta izmēra ierobežojošie logi, kuri ir vienmērīgi izvietoti attēla robežās. Pēc tam kad iegūts saraksts ar iespējamiem objektiem un to atrašanās vietām attēlā, detektēšanas problēma paliek krietni vienkāršāka. Izmantojot no konvolūcijas neironu tīkla iegūtās īpašību kartes un reģionu logus ar atbilstošajiem objektiem, pielieto RoI (no angļu val. Region of Interest) apvienošanu.
+Ievades attēls ir vairākdimensiju masīvs, kuru padod ievadē konvolūcijas neironu tīklam līdz tiek iegūta īpašību karte. Pēc īpašību kartes iegūšanas, tā tiek nodota RPN. Izmantojot šīs īpašības, tīkls meklē iepriekš definētu skaitu ar reģioniem (ierobežojošajiem logiem, kurus sauc par \textit{anchors}), kuri var saturēt objektus (RPN nav svarīgi noskaidrot kādas klases objekts atrasts, tikai vai reģionā ir kāds objekts vai reģions satur tikai fona informāciju).  Šie reģionu logi ir fiksēta izmēra ierobežojošie logi, kuri ir vienmērīgi izvietoti attēla robežās. Pēc tam kad iegūts saraksts ar iespējamiem objektiem un to atrašanās vietām attēlā, detektēšanas problēma paliek krietni vienkāršāka. Izmantojot no konvolūcijas neironu tīkla iegūtās īpašību kartes un reģionu logus ar atbilstošajiem objektiem, pielieto RoI (no angļu val. Region of Interest) apvienošanu.
 \begin{figure}[h]%
 	\centering
 	\includegraphics[height=5cm]{images/rpnstep.png} %
@@ -84,3 +83,88 @@ Pēc RoI apvienošanas soļa seko R-CNN daļa, kas klasificē reģionu logu satu
 \end{figure}
 
 Līdzīgi kā pēc RPN soļa, pēc R-CNN soļa ir iegūti objekti, kuriem ir atrastas klases un kurus ir nepieciešams papildus apstrādāt. Lai  katram reģionam pielietotu ierobežojošo logu labojumus, tiek ņemts vērā kuras klases atrastā varbūtība bija ar visaugstāko vērtību (ja reģiona augstākā varbūtība ir klase "fons", tad šis reģions tiek ignorēts). Pēc gala objektu iegūšanas un "fona" objektu atmešanas, tiek pielietots uz klasēm balstīts NMS (\textit{non-maximum suppression}), lai novērstu vienas un tās pašas objekta instances detektēšanu vairākos reģionos \cite{hosang2017learning}.
+
+\subsubsection{SSD (\textit{Single Shot MultiBox Detector})}
+
+Īsumā, \textit{SSD} galvenā ideja ir tāda, ka tiek izmantots tikai viens neironu tīkls, kas padara risinājumu ātru un nav nepieciešamība pēc reģionu priekšlikumiem. Tā vietā, tiek izmantotas dažādi ierobežojošie logi, kuri tiek mainīti prognožu izdarīšanas laikā. Pētījums par \textit{SSD} kļuva pieejams 2016. gadā \cite{liu2016ssd} un šī detektēšanas sistēma uzstādīja jaunus rekordus veiktspējā un precizitātē objektu detektēšanas uzdevumu veikšanai. Lai labāk saprastu \textit{SSD} ir vērtīgi izskaidrot šīs sistēmas pilno nosaukumu:
+\begin{itemize}
+	\item \textit{\textbf{Single Shot}} : tas nozīmē, ka objektu lokalizācijas un klasifikācijas uzdevumus tiek veikts neironu tīkla slāņiem izejot cauri vienu reizi;
+	\item \textit{\textbf{MultiBox}} : ir ierobežojošo logu regresijas tehnika, kuru izveidoja pētnieki, kas strādāja ar pie \textit{SSD} izveides;
+	\item  \textit{\textbf{Detector}} : \textit{SSD} sistēmā neironu tīkls ir objektu detektors, kas arī klasificē detektētos objektus;
+\end{itemize}
+\newpage
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=4.5cm]{images/ssdarch.png} %
+	\caption{SSD arhitektūra \cite{ssdarch}}%
+	\label{fig:example}%
+\end{figure}
+
+Attēlā 2.6 ir attēlota \textit{SSD} arhitektūra, kur parādīts, ka šī objektu detektēšanas sistēma ir balstīta uz \textit{VGG Net} arhitektūru, taču netiek izmantoti standarta arhitektūras pilnīgi savienotie slāņi. \textit{VGG Net} neironu tīkla arhitektūra tiek izmantota kā \textit{SSD} bāze, jo tā darbojas ar augstu veiktspēju attēlu klasifikācijas uzdevumu veikšanā \cite{simonyan2014very}. Tai vietā, lai \textit{SSD} izmantotu pilnīgi savienotos slāņus no standarta \textit{VGG Net} konfigurācijas, tiek izmantoti papildus konvolūcijas slāņi, lai būtu iespējams iegūt attēla īpašības dažādos attēla izmēros un samazinātu katra nākamā slāņa ievadē saņemto attēlu izmēru. 
+
+\textit{MultiBox} ir ierobežojošo logu regresijas metode, kas balstīta uz \textit{SSD} izstrādātāju pētījumu par objektu ierobežojošo logu koordināšu priekšlikumiem \cite{szegedy2014scalable}, kur nav zināmas objektu klases. \textit{MultiBox} \textit{loss} funkcija apvieno divas objektu detektēšanas mērvienības: \textit{confidence loss} un \textit{location loss}. \textit{Confidence loss} mēra, cik pārliecināts ir tīkls, ka aprēķinātais ierobežojošais logs satur objektu. \textit{Location loss} mēra cik tālu no tīkla prognozētajiem ierobežojošajiem logiem atrodas \textit{ground-truth} ierobežojošie logi apmācības datos. \textit{MultiBox loss} aprēķina sekojoši:
+
+\begin{equation*}
+\var{multibox_loss}
+= \var{confidence_loss}
++ \var{alpha}
+* \var{location_loss}
+\end{equation*}
+\textit{Alpha} minētajā vienādojumā palīdz balansēt \textit{location loss} vērtību. Līdzīgi kā citām dziļās mašīnmācīšanās sistēmām, ir nepieciešams atrast vienādojuma parametrus, kas vislabāk samazina \textit{loss} funkciju, tādējādi pietuvinot tīkla prognozes \textit{ground-truth} vērtībām.
+
+\textit{MultiBox} pētnieki veidojot šo metodi ieviesa jaunu terminu \textit{priors}. \textit{Priors} ir iepriekš aprēķināti, fiksēta izmēra ierobežojošie logi (\textit{Faster R-CNN} sistēmā šos logus sauc par \textit{anchors}), kas cieši sakrīt ar \textit{ground-truth} ierobežojošo logu izvietojumu. Balstoties uz šiem iepriekš aprēķinātajiem ierobežojošiem logiem, \textit{MultiBox} tos izmanto kā prognozes un mēģina regresēt tuvāk \textit{ground-truth} ierobežojošajiem logiem. Beigās \textit{MultiBox} saglabā tikai labākās prognozes ar minimizētām \textit{location loss} un \textit{confidence loss}. 
+
+\textit{SSD} pētījumā ir veikti uzlabojumi standarta \textit{MultiBox} sistēmai, kas padara šo objektu detektēšanas sistēmu vēl spējīgāku lokalizēt un klasificēt objektus. \textit{SSD} katra īpašību kartes šūna ir savienota ar dažādu izmēru un dažādu proporciju ierobežojošajiem logiem (\textit{priors}). Šie logi ir manuāli izvēlēti, kas, teorētiski, ļauj \textit{SSD} darboties ar dažādi konfigurētiem ievades datiem. Pieņemot, ka ir definēts \textit{c} skaits klašu, katrai īpašību kartes šūnai ir definēts \textit{b} skaits ierobežojošo logu un īpašību kartes izmērs ir \textit{f}, \textit{SSD} aprēķinātu \textit{f * b * (4 + c)}
+vērtības šai īpašību kartei. 
+
+\begin{figure}[!htb]
+	\minipage{0.32\textwidth}
+	\includegraphics[width=\linewidth]{images/ssdgtboxes.png}
+	\caption{Attēls ar \textit{ground-truth} logiem \cite{liu2016ssd}}
+	\endminipage\hfill
+	\minipage{0.32\textwidth}
+	\includegraphics[width=\linewidth]{images/ssd88featmap.png}
+	\caption{8 x 8 izmēra īpašību karte \cite{liu2016ssd}}
+	\endminipage\hfill
+	\minipage{0.32\textwidth}%
+	\includegraphics[width=\linewidth]{images/ssd44featmap.png}
+	\caption{4 x 4 izmēra īpašību karte \cite{liu2016ssd}}
+	\endminipage
+\end{figure}
+
+Attēlā 2.7 ir parādīts, ka apmācības laikā \textit{SSD} ir tikai nepieciešams ievades attēls un \textit{ground-truth} logi, kas atspoguļo objektus attēlā. Izmantojot konvolūcijas principus, tiek novērtēti daži ierobežojošie logi, dažādos attēla mērogos un tie tiek uzglabāti īpašību kartēs ar dažādiem izmēriem (attēlā 2.8 ir parādīta 8x8 izmēra īpašību karte un attēlā 2.9 4x4 izmēra īpašību karte). Katram logam aprēķina formas nobīdi no patiesās un pārliecības vērtības katrai objektu kategorijai (attēlā 2.9 c1,c2,...,cp). Apmācības laikā, definētie logi tiek pieskaņoti \textit{ground-truth} logiem. Piemēram, attēlā 2.7 parādīts, ka divi ierobežojošie logi ir pieskaņoti kaķim un sunim. Modeļa \textit{loss} (modeļa kopējā precizitāte ņemot vērā apmācības un validācijas datus) ir svērtā summa starp \textit{localization loss} un \textit{confidence loss}. 
+
+Līdzīgi \textit{Faster-RCNN}, arī \textit{SSD} kā vienu no pēdējiem soļiem tīkla izpildes laikā izmanto \textit{non-maximum suppression} (NMS). Pēc detektēšanas soļa iegūtie logi tiek šķiroti pēc norādīta sliekšņa, kas atkarīgs no \textit{confidence loss} vērtības. Tikai labākos logus saglabā un pārējie (mazāks \textit{confidence loss} par sliekšņa vērtību) tiek atmesti. NMS pielietošana nodrošina, ka tikai labākās logu prognozes tīkls saglabās un trokšņainās atmetīs.
+ \newpage
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=4cm]{images/nms.png} %
+	\caption{\textit{Non-maximum supression} piemērs \cite{liu2016ssd}}%
+	\label{fig:example}%
+\end{figure}
+
+\textit{SSD} pētījumā \cite{liu2016ssd} ir aprakstīti novērojumi par sistēmas darbību:
+\begin{itemize}
+	\item Jo vairāk iepriekš definētie logi, jo precīzāk notiek detektēšana, taču tas negatīvi ietekmē sistēmas ātrumu;
+	\item Izmantojot \textit{MultiBox} vairākos slāņos, sistēma objektu detektēšanu veic precīzāk, jo detektors tad darbojas ar dažādu izšķirtspēju īpašībām;
+	\item \textit{SSD} mēdz jaukt objektus, kam ir līdzīgas klases (piemēram, dzīvnieki ar 4 kājām);
+	\item \textit{SSD} vāji strādā ar maziem objektiem, jo tie var neuzrādīties visās īpašību kartēs. Palielinot ievades attēlu izšķirtspēju ir iespējams samazināt šo problēmu.
+\end{itemize}
+
+Ņemot vērā tikai pētījumos \cite{redmon2016you,ren2015faster,liu2016ssd} pieejamo informāciju, dotajā brīdī, \textit{Faster R-CNN} ir labākā objektu detektēšanas sistēma, ja vērā ņem tikai precizitātes vērtējumus un lietotājam ir pieejami neierobežoti skaitļošanas resursi. Ja lietotājiem ir ierobežoti skaitļošanas resursi, \textit{SSD} ir labākais ātruma un precizitātes kompromiss. Ja par precizitāti nav jāuztraucas, bet ir vēlme pēc ļoti ātras sistēmas, tad labākais variants ir \textit{YOLO}. Lai gan \textit{Faster R-CNN} labāk par pārējiem spēj atrast maza izmēra objektus, sistēma ir lēna un nenodrošina reālā laika detektēšanu. Gan \textit{YOLO}, gan \textit{SSD} sistēmas nodrošina reālā laika objektu detektēšanu, kas ir nepieciešams šī darba ietvaros. Ņemot vērā augstāk minēto informāciju, pētījuma ietvaros radītais risinājums izmantos \textit{SSD} objektu detektēšanas sistēmu, jo tā ir labākā precizitātes un ātruma apvienojums un apmācību ir iespējams veikt ar lietotājiem pieejamākām ierīcēm. 
+
+Pēc objektu detektēšanas metodes izvēlēšanās, šī pētījuma ietvaros ir nepieciešams apskatīt sekošanas risinājumus, kuru izmantot gala risinājumā. Lai veiksmīgi veiktu cilvēku plūsmas analīzi, ar izvēlēto objektu detektēšanas metodi vien nepietiek, objektiem ir arī jāseko. Šādā risinājumā ir vērtīgi ieviest sekošanas risinājumu sekojošu iemeslu dēļ:
+\begin{itemize}
+	\item Sekošanas algoritmi darbojas ātrāk kā detektēšanas algoritmi. Šādu argumentu var izskaidrot ar to, ka sekojot objektam, kas jau ir atrasts iepriekšējā kadrā, sistēmai ir pieejama informācija par objekta attēlojumu, atrašanās vietu, kustības virzienu un kustības ātrumu. Sekošanas algoritms izmantos visu šo informāciju, lai nepazaudētu objekta atrašanās vietu, kamēr objektu detektēšanas algoritmam katrs katrs ir jāapstrādā no jauna.
+	\item Sekošanas algoritmi ir kā drošības tīkls gadījumā, ja detektēšanas risinājumi vairs nevar atrast kādu no iepriekšējos kadros noteiktajiem objektiem. Piemēram, ja starp objektu un video kameru nostājas šķērslis, tas detektēšanas risinājumiem sagādās pamatīgas problēmas, kamēr labs sekošanas risinājums nepazaudētu objekta atrašanās vietu.
+	\item Sekošanas algoritmi veido savienojumus starp video kadriem, tādā veidā saglabājot objekta identitāti.
+\end{itemize}
+
+Sekošanas mērķis ir atrast objektu dotajā video kadrā, pieņemot, ka objektam ir veiksmīgi sekots visos iepriekšējos kadros vai dotajā kadrā pirmo reizi atrasta šī objekta instance. Tā kā objektam ir sekots līdz dotajam kadram, ir zināms, ka objekts kustas, kas nozīmē, ka ir zināmi kustības modeļa parametri. Kustības modeli veido iepriekšējos kadros noteiktā objekta atrašanās vieta un ātrums. Nezinot neko citu kā kustības modeļa parametrus jau ir iespējams izteikt diezgan precīzu minējumu kur dotajā kadrā varētu atrasties objekts. Risinot sekošanas problēmu video fragmentos, ir pieejama informācija par vairāk kā tikai objekta kustību ir zināms arī objekta izskats visos iepriekšējos kadros. Zinot objekta izskatu, ir iespējams veidot izskata modeli, šādu modeli var izmantot, lai precizētu objekta atrašanās vietu pēc tam, kad balstoties uz kustības modeli ir izdarīts minējums par aptuveno objekta atrašanās vietu. Ja objekts ir vienkāršs un starp kadriem izskatu nav mainījis, tad izskata modeli var izmantot kā veidni, kuru meklēt jaunajā kadrā. Diemžēl, objekta izskats var pamatīgi mainīties, lai cīnītos ar šo problēmu modernie sekošanas risinājumi izmanto izskata modeli kā klasifikatoru, kurš tiek apmācīts algoritma izpildes laikā. 
+
+Gala risinājuma izstrādes laikā tika apskatīti \textit{OpenCV} programmatūrā piedāvātie sekošanas algoritmi: \textit{Multiple Instance Learning} (MIL) un \textit{AdaBoost} kā arī \textit{SiamFC} sekošanas algoritms, kas neietilpst \textit{OpenCV} bibliotēkā, bet ir aprakstīts Luka Bertinetto pētījumā \cite{bertinetto2016fully}.
+
+\subsubsection{Multiple Instance Learning}
+
+\subsubsection{AdaBoost}
+\subsubsection{SiamFC}
