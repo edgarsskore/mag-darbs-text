@@ -2,13 +2,28 @@
 \section{Klasiskie mašīnmācīšanās algoritmi}
 \paragraph{Lineārā regresija}
 \hfill\par
-Iespējams vienkāršākais un vislabāk izprastais statistikas un mašīnmācīšanās algoritms ir lineārā regresija. Lineārās regresijas atspoguļojums ir vienādojums, kas apraksta līniju, kura vislabāk parāda attiecības starp ievades mainīgajiem \textit{x} un izvades mainīgajiem \textit{y}. 
+Iespējams vienkāršākais un vislabāk aprakstītais statistikas un mašīnmācīšanās algoritms ir lineārā regresija. Lineārās regresijas reprezentācija ir vienādojums, kas apraksta līniju, kura vislabāk parāda attiecības starp ievades mainīgajiem \textit{x} un izvades mainīgajiem \textit{y}. Sakarību kas paskaidro \textit{x} un \textit{y} nosaka mainīgie, ko sauc par koeficientiem \textit{b} un tos izmanto kā svarus ievades datiem.
+
 \begin{figure}[h]%
 	\centering
-	\includegraphics[height=5cm]{images/linreg.png} %
+	\includegraphics[height=4cm]{images/linreg.png} %
 	\caption{Lineārās regresijas piemērs}%
 	\label{fig:example}%
-\end{figure}
+\end{figure} 
+
+Par piemēru ņemot vienādojumu: $ y = b_0 + b_1 * x $ , tiek prognozētas \textit{y} vērtības, ņemot vērā \textit{x} vērtības un mērķis ir atrast koeficientus $b_0$ un $b_1$. Lai aprēķinātu lineārās regresijas modeli no šādiem datiem, gadiem ejot, ir parādījušās dažādas metodes, piemēram, lineārās algebras risinājumi vai gradienta nolaišanas optimizācija. Lineāro regresiju izmanto jau 200 gadu un ir tā ir bagātīgi pētīta. Šo tehniku var izmantot, lai, piemēram, atmestu datos esošus, līdzīgus mainīgos vai, lai noņemtu datiem troksni. 
+\newpage
+\paragraph{Atbalsta vektoru mašīnas}
+\hfill\par
+Atbalsta vektoru mašīnas (no angļu val. \textit{support vector machines}) (SVM) ir viens no vispopulārākajiem mašīnmācīšanās algoritmiem, klasifikācijas problēmu risināšanai. Svarīgs parametrs SVM ir hiperplakne (no angļu val. \textit{hyperplane}). Hiperplakne ir līnija, kas sadala ievades datus. To izvēlas tādu, lai tā vislabāk sadalītu ievades datus klasēs. Kā piemēru ņemot divdimensiju plakni, hiperplakni var vizualizēt kā līniju un perfektā gadījumā šī līnija pilnīgi atdalīs visus punktus pa klasēm. SVM algoritmi meklē koeficientus, kurus izvēloties hiperplakne vislabāk atdalīs klases. 
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=5cm]{images/svm.png} %
+	\caption{Atbalsta vektoru mašīnas piemērs}%
+	\label{fig:example}%
+\end{figure} 
+
+Distance starp hiperplakni un tuvākajiem katras klases datu punktiem sauc par robežu (no angļu val. \textit{margin}). Hiperplakni uzskata par optimālu, kad izvēlētā līnija ir atdalījusi klasi un starp hiperplakni un datu punktiem ir vislielākā iespējamā robeža. Punkti, kas atrodas uz robežas veido atbalsta vektorus. Atbalsta vektori ir galvenā sastāvdaļa ko izmanto hiperplaknes definēšanai un klasifikatora izveidei.
 \paragraph{Lēmumu koki}
 \hfill\par
 Lēmumu koki atspoguļo reālās dzīves koka struktūru un tos izmanto gan klasifikācijas, gan regresijas problēmu risināšanā. Analizējot datus, lēmumu kokus var izmantot, lai vizuāli aprakstītu lēmumus un lēmumu pieņemšanu. Mašīnmācīšanās gadījumā, lēmumu kokus apraksta kā klasifikācijas kokus vai regresijas kokus (\textit{CART - Classification and Regression Trees}), atkarībā no veicamā uzdevuma.  Galvenā šo koku doma ir audzēt zarus, pieņemot lēmumus, kuras koka īpašības izvēlēties, zinot apstāšanās nosacījumu \cite{dectree}. Lai gan lēmumu koki nav vispopulārākais mašīnmācīšanās veids, tas tiek pielietots klasifikācijas problēmu risināšanai dotajos pētījumos \cite{dectreepaper,pal2003assessment}.
