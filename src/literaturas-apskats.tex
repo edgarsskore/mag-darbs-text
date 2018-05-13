@@ -186,6 +186,80 @@ Neskaitot lielo slāņu skaitu,    \textit{ResNet} tīklu struktūra no pārēj�
 	\label{fig:example}%
 \end{figure}
 \subsection{Ietvari un programmatūra}
+Dziļās mašīnmācīšanās nozarē joprojām ir ļoti daudz ko pētīt un atklāt, kas nozīmē, ka lielākajām tehnoloģiju kompānijām kā \textit{Google}, \textit{Amazon}, \textit{Facebook} un \textit{Microsoft} ir vēlme būt labākajiem dziļās mašīnmācīšanās risinājumu izstrādātājiem. Visām minētajām kompānijām ir aktuāli izstrādāt viņu pašu dziļās mašīnmācīšanās ietvarus vai atbalstīt jau esošus risinājumus. Pieņemot, ka ir simtiem dziļās mašīnmācīšanās risinājumu, ir aktuāli apskatīt dažus no visbiežāk izmantotajiem ietvariem.
+
+\subsubsection{\textit{TensorFlow}}
+
+\textit{TensorFlow} vietnē \cite{tensor1} šis risinājums ir raksturots kā atvērtā koda programmatūras bibliotēka skaitliskiem aprēķiniem, izmantojot datu plūsmas grafikus. Mūsdienās, tas ir visbiežāk izmantotais dziļās mašīnmācīšanās ietvars, kuru izveidoja kompānijas \textit{Google} speciālisti. Lai gan \textit{TensorFlow} ir saņēmis kritiku, ka to ir sarežģīti izmantot, to izmanto vairākas tehnoloģiju kompānijas, eksperti un tehnoloģiju entuziasti visā pasaulē. Kā vēl vienu negatīvu \textit{TensorFlow} īpašību var minēt tā ātrumu, salīdzinājumā ar citiem dziļās mašīnmācīšanās risinājumiem, tas ir \cite{tensor2} lēnāks. \textit{TensorFlow} savu risinājumu izveidē izmanto lielas kompānijas dažādās industrijās, kā : \textit{eBay}, \textit{Coca Cola}, \textit{Twitter} un \textit{Uber}. 2015. gadā to padarīja par atvērtā koda risinājumu, lai tādā veidā pievilinātu jaunos talantus, kas varētu palīdzēt uzlabot ietvaru un izveidot papildu, strādājošus paraugus, ko izmantot lietotājiem. 
+
+
+	\begin{table}[ht!]	
+	\centering
+	\begin{tabular}{ |p{7cm}|p{7cm}| }
+		\hline
+		\textbf{Plusi} & \textbf{Mīnusi}\\ \hline
+		Iespējams izstrādāt risinājumus \textit{Python} valodā & Lēnāks salīdzinājumā ar citiem ietvariem \\ \hline 
+		Populārākais dziļās mašīnmācīšanās ietvars - apjomīga kopiena & Patērē lielu skaitļošanas jaudu \\ \hline
+		Iespējams paralalizēt datu apstrādi  & Neērts lielos projektos \\  \hline
+		Iespējams vizualizēt datus & Sarežģīts lietošanā\\ \hline
+	\end{tabular}
+\caption{\textit{TensorFlow} labās un sliktās īpašības}
+\end{table}
+
+
+\subsubsection{\textit{Keras}}
+
+\textit{Keras} ir augsta līmeņa neironu tīklu programmējams interfeiss. Tas tika izveidots, lai padarītu prototipēšanu un eksperimentēšanu neticami ātru ar domu, ka tikšana no idejas līdz rezultātam pēc iespējas mazākā laikā posmā ir svarīgākais elements veicot pētījumus.
+
+	\begin{table}[ht!]	
+		\centering
+		\begin{tabular}{ |p{7cm}|p{7cm}| }
+			\hline
+			\textbf{Plusi} & \textbf{Mīnusi}\\ \hline
+			Intuitīvs programmējams interfeiss & Slikti atbalsta paralēlo skaitļošanu \\ \hline 
+			Apvienojams ar \textit{TensorFlow} & Slikti atbalsta GPU skaitļošanu \\ \hline
+			Ietvars strauji attīstās (nākotnē tiks pievienots \textit{TensorFlow})  &  \\  \hline
+			Regulāri atjauninājumi & \\ \hline
+		\end{tabular}
+		\caption{\textit{Keras} labās un sliktās īpašības}
+	\end{table}
+
+
+\subsubsection{\textit{Darknet}}
+
+\textit{Darknet} ir atvērtā koda, neironu tīklu ietvars, kurš izveidots C programmēšanas valodā ar CUDA atbalstu. To ir viegli uzstādīt, tas ir ātrs un atbalsta gan CPU, gan GPU skaitļošanu. \textit{Darknet} ir vienīgais ietvars, kas piedāvā standarta \textit{YOLO} objektu detektēšanas sistēmas implementāciju. 
+
+	\begin{table}[ht!]
+		\centering	
+		\begin{tabular}{ |p{7cm}|p{7cm}| }
+			\hline
+			\textbf{Plusi} & \textbf{Mīnusi}\\ \hline
+			Ātrdarbība & Sarežģīts, jo programmēts C valodā \\ \hline 
+			Atbalsta CPU un GPU skaitļošanu & Vāji dokumentēts \\ \hline
+			YOLO implementācija  &  \\  \hline
+		\end{tabular}
+		\caption{\textit{Darknet} labās un sliktās īpašības}
+	\end{table}
+
+
+\subsubsection{\textit{Caffe}}
+
+\textit{Caffe} izveidoja \textit{Berkeley Artificial Intelligence Research} ar domu radīt ātru risinājumu, lielākoties objektu klasifikācijas un segmentācijas problēmu risināšanai. Neskaitot ātrumu, \textit{Caffe} piedāvā labi aprakstītu interfeisu, lai veiktu konvolūcijas neironu tīklu modelēšanu. Pēc tam, kad šis risinājums kļuva populārs, kompānija \textit{Facebook}, iedvesmojoties no \textit{Caffe}, radīja \textit{Caffe2}, kas lietotājiem piedāvā jau dažādus apmācītus modeļus ar kuriem veidot visa veida aplikācijas. 
+
+	\begin{table}[ht!]	
+		\centering
+		\begin{tabular}{ |p{8cm}|p{7cm}| }
+			\hline
+			\textbf{Plusi} & \textbf{Mīnusi}\\ \hline
+			Specifiski paredzēts attēlu apstrādes problēmu risināšanai & Neiznāk programmatūras atjauninājumi \\ \hline 
+			Labs \textit{feed-forward} tīklu atbalsts  & Slikts rekurento tīklu atbalsts \\ \hline
+			Iespējams apmācīt modeļus bez koda rakstīšanas  &  Apgrūtinoši darboties ar dziļiem (daudz slāņu) tīkliem\\  \hline
+			Iespējams labot eksistējošu tīklu struktūras  & \\ \hline
+		\end{tabular}
+		\caption{\textit{Caffe} labās un sliktās īpašības}
+	\end{table}
+
+
 \subsection{Tīklu apmācība}
 Vispārīgu konvolūcijas neironu tīklu apmācību, pieņemot, ka ievades dati ir attēli un ir definētas 4 klases, var aprakstīt sekojošos soļos:
 \begin{enumerate}
