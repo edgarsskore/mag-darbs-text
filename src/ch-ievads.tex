@@ -1,18 +1,24 @@
 \chapter{Ievads}
-Ievadā ir jāietver:
+Jebkāda veida objektu atpazīšana, neatkarīgi no tā vai tās ir galvas, cilvēki vai jebkāds cits objekts, ir svarīgs uzdevums dažādām datorredzes problēmām. Sejas atpazīšanas problēmas ir zināmas jau diezgan ilgu laiku, taču cilvēku atpazīšana dažādos kameru leņķos, pie dažādām izšķirtspējām, pie dažādiem apgaismojumiem, dažādām cilvēku pozām vai cilvēku atpazīšana attēlos, kuri ir pārpildīti ar cilvēkiem joprojām ir sarežģīts uzdevums.
 
+Šī darba nolūkos, autors izvirzīja mērķi izstrādāt risinājumu, kas veic cilvēku plūsmas analīzi, izmantojot konvolūcijas tīklu un sekošanas algoritmu analīzi. Lai sasniegtu darba mērķi, ir nepieciešams veikt sekojošus uzdevumus:
 \begin{itemize}
-\item temata aktualitātes pamatojums;
-\item darba mērķis;
-\item darba mērķa sasniegšanai veicamo uzdevumu formulējums;
-\item izmantojamo pētīšanas metožu un paņēmienu uzskaitījums;
-\item literatūras un avotu grupu uzskaitījums (piemēram, speciālā ekonomiskā literatūra, valsts statistikas dati, nepublicētie materiāli no uzņēmuma arhīva u.c.);
-\item darba struktūras apraksts;
-\item pētījuma temata un perioda norobežojums (ja tas nepieciešams).
+	\item Iepazīties ar plūsmas analīzes metodoloģiju, veikt literatūras izpēti;	
+	\item Salīdzināt dažādas konvolūcijas neironu tīklu arhitektūras un objektu detektēšanas algoritmus;
+	\item Salīdzināt dažādus sekošanas algoritmus;
+	\item Izstrādāt risinājumu, kas veic objektu detektēšanu un sekošanu šiem objektiem video kadros;
+	\item Pārbaudīt izveidotā risinājuma veiktspēju ar dažādiem video fragmentiem.	
 \end{itemize}
 
-Mašīnmācīšanās algoritmi ir kļuvuši par neatņemamu sastāvdaļu programmatūras izstrādātājiem un kompānijām, kas savas aplikācijas grib padarīt "gudras". Lai arī cik, mūsdienās, šis jēdziens ir kļuvis populārs, oficiāla mašīnmācīšanās definīcija nav noteikta. Visvienkāršākais mašīnmācīšanās pielietojums ir apstrādāt datus, mācīties no tiem un no iegūtajiem rezultātiem pieņemt lēmumus vai veikt minējumus reālās pasaules problēmu risināšanai. Tā vietā, lai manuāli veidotu programmatūras risinājumus, kas veic kādu uzdevumu, tiek apmācīti datori vai citas ierīces, izmantojot lielus datu apjomus. 
+Autors pētījumā plāno izpētīt metodes, lai varētu novērot cilvēku plūsmu pilsētu objektos, kuri ir nesen izveidoti vai ir nesen tikuši atjaunoti vai remontēti, lai noteiktu ceļu, velosipēdu brauktuvju vai pastaigu taku nolietojumu. Rezultātā tiks iegūta sistēma, kas uzticami varētu veikt cilvēku skaitīšanu video ierakstos vai arī tiešsaistes straumē izmantojot konvolūciju neironu tīklus. Tālāk šādu sistēmu būtu iespējams viegli modificēt ,lai to pielietotu objektu skaitīšanai citās nozarēs, piemēram, bioloģijā (šūnu skaitīšana) vai automašīnu skaitīšana.
+
+Esošās metodes, kas balstās uz konvolūciju neironu tīkliem veiksmīgi tiek galā ar dažām no augstākminētajām problēmām, taču attēli, kuros ir ļoti daudz cilvēku joprojām sagādā grūtības un, lai atrastu visus cilvēkus tādos attēlos ir nepieciešamas pielietot papildu metodes. Divas no populārākajām metodēm ir tiešā un netiešā cilvēku skaitīšana. Netiešās cilvēku skaitīšanas galvenā ideja ir izmantot kontekstuālo (kopējo) informāciju. Vairāki eksistējošie pētījumi, kuros izmanto semantisko segmentāciju, ainu pārsēšanu un vizuālās īpašības demonstrē, ka kontekstuālās informācijas izmantošana nodrošina nozīmīgus uzlabojumus rezultātos, kas nozīmē, ka kontekstuālās informācijas izmantošana var palīdzēt apmācības procesā un rezultātā ļaus iegūt prezīcāku cilvēku skaita novērojumu \cite{sindagi2017generating}.
+Otrā no populārākajām metodēm, tiešā cilvēku skaitīšana, katrā ainā meklē visas cilvēku sejas pa vienai balstoties uz sejas īpašībām (no angļu val. - \textit{feature based}) un tās saskaita, kopējo attēla kontekstu neņemot vērā. 
+
+TODO aprakstīt darba struktūru 
+
 \section{Mašīnmācīšanās pamatjēdziens}
+Mašīnmācīšanās algoritmi ir kļuvuši par neatņemamu sastāvdaļu programmatūras izstrādātājiem un kompānijām, kas savas aplikācijas grib padarīt "gudras". Lai arī cik, mūsdienās, šis jēdziens ir kļuvis populārs, oficiāla mašīnmācīšanās definīcija nav noteikta. Visvienkāršākais mašīnmācīšanās pielietojums ir apstrādāt datus, mācīties no tiem un no iegūtajiem rezultātiem pieņemt lēmumus vai veikt minējumus reālās pasaules problēmu risināšanai. Tā vietā, lai manuāli veidotu programmatūras risinājumus, kas veic kādu uzdevumu, tiek apmācīti datori vai citas ierīces, izmantojot lielus datu apjomus. 
 Pasaulē ir daudz un dažādi mašīnmācīšanās algoritmi un katru dienu tiek publicēti simtiem jaunu algoritmu. Tos var sagrupēt pēc apmācības veida (vadītā apmācība (\textit{supervised learning}), nevadītā apmācība (\textit{unsupervised learning}), pusvadītā apmācība (\textit{semi-supervised learning})) kā arī pēc formas vai funkcijas līdzībām (klasifikācija, regresija, lēmumu koki (\textit{decision trees}), klasterēšana (\textit{clustering}), dziļā mašīnmācīšanās (\textit{deep learning})). Neatkarīgi no apmācības veida vai pielietojuma, visas mašīnmācīšanās algoritmu kombinācijas sastāv no klasifikatoriem (atbalsta vektora mašīna, lēmuma koki, neironu tīkli), vērtēšanas funkcijām (varbūtības funkcijas, robežfunkcijas, izmaksu funkcija) un optimizācijas funkcijām (mantkārīgā meklēšana, nepārtrauktās optimizācijas metodes (\textit{continuous optimization})). Izmantojot šīs sastāvdaļas, mašīnmācīšanās algoritmu pamata mērķis ir būt spējīgam funkcionēt ne tikai ar apmācībā piedāvātajiem datiem, bet arī spēt darboties ar datiem, ar kuriem algoritms nav saskāries. Atkarībā no veicamā uzdevuma, ir dažādi veidi kā panākt, lai datori vai jebkura cita ierīce mācās, sākot ar visparastākajiem lēmumu kokiem, beidzot ar ģenētiskajiem algoritmiem un mākslīgajiem neironu tīkliem. 
 
 

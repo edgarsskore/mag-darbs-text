@@ -192,7 +192,6 @@ Dziļās mašīnmācīšanās nozarē joprojām ir ļoti daudz ko pētīt un atk
 
 \textit{TensorFlow} vietnē \cite{tensor1} šis risinājums ir raksturots kā atvērtā koda programmatūras bibliotēka skaitliskiem aprēķiniem, izmantojot datu plūsmas grafikus. Mūsdienās, tas ir visbiežāk izmantotais dziļās mašīnmācīšanās ietvars, kuru izveidoja kompānijas \textit{Google} speciālisti. Lai gan \textit{TensorFlow} ir saņēmis kritiku, ka to ir sarežģīti izmantot, to izmanto vairākas tehnoloģiju kompānijas, eksperti un tehnoloģiju entuziasti visā pasaulē. Kā vēl vienu negatīvu \textit{TensorFlow} īpašību var minēt tā ātrumu, salīdzinājumā ar citiem dziļās mašīnmācīšanās risinājumiem, tas ir \cite{tensor2} lēnāks. \textit{TensorFlow} savu risinājumu izveidē izmanto lielas kompānijas dažādās industrijās, kā : \textit{eBay}, \textit{Coca Cola}, \textit{Twitter} un \textit{Uber}. 2015. gadā to padarīja par atvērtā koda risinājumu, lai tādā veidā pievilinātu jaunos talantus, kas varētu palīdzēt uzlabot ietvaru un izveidot papildu, strādājošus paraugus, ko izmantot lietotājiem. 
 
-
 	\begin{table}[ht!]	
 	\centering
 	\begin{tabular}{ |p{7cm}|p{7cm}| }
@@ -275,7 +274,7 @@ Vispārīgu konvolūcijas neironu tīklu apmācību, pieņemot, ka ievades dati 
 Augstāk minētie soļi apmāca konvolūcijas neironu tīklu, kas nozīmē, ka visi svari un tīkla parametri ir optimizēti, lai pareizi klasificētu datu kopā esošos attēlus. Kad tīklam tiek padots jauns, līdz šim neredzēts attēls (attēls, kas netika izmantots apmācību laikā), ar to tiks veikts 2. solis no augstāk minētā saraksta un tiks atgriezta varbūtība ar kādu attēlā esošie objekti pieder katrai klasei. Ja datu kopa ir pietiekami liela un tīkls ir labi apmācīts, tas spēs jaunos attēlus sadalīt pareizās kategorijās. 
 
 \section{Plūsmas analīzes stratēģija}
-Ir aprakstītas vairākas metodes, lai veiktu cilvēku plūsmu analīzi attēlos un video fragmentos \cite{brostow2006unsupervised,chen2013cumulative,ge2009marked,chen2015person,lempitsky2010learning}. Vispārīgi, pirmie pētījumi tika vērsti uz detektēšanas veida izvēli un vai problēmu var risināt izmantojot segmentācijas metodes \cite{tu2008unified}. Šīs metodes nelabvēlīgi ietekmēja objektu nostāšanās vienam aiz otra, objektu pazušana un nekārtīgs (pārblīvēts TODO pārbaudīt tulkojumu (high clutter background)) fons attēlos. Jaunākos risinājumus var vispārīgi sadalīt trīs kategorijās: risinājumi, kas balstīti uz regresiju, risinājumi, kas balstīti uz pūļa blīvuma novērtējumu un risinājumi, kas balstīti uz konvolūcijas neironu tīkliem. 
+Ir aprakstītas vairākas metodes, lai veiktu cilvēku plūsmu analīzi attēlos un video fragmentos \cite{brostow2006unsupervised,chen2013cumulative,ge2009marked,chen2015person,lempitsky2010learning}. Vispārīgi, pirmie pētījumi tika vērsti uz detektēšanas veida izvēli un vai problēmu var risināt izmantojot segmentācijas metodes \cite{tu2008unified}. Šīs metodes nelabvēlīgi ietekmēja objektu nostāšanās vienam aiz otra, objektu pazušana un nekārtīgs (pārblīvēts) fons attēlos. Jaunākos risinājumus var vispārīgi sadalīt trīs kategorijās: risinājumi, kas balstīti uz regresiju, risinājumi, kas balstīti uz pūļa blīvuma novērtējumu un risinājumi, kas balstīti uz konvolūcijas neironu tīkliem. 
 
 \subsubsection{Risinājumi, kas balstīti uz regresiju}
 Lai novērstu objektu paslēpšanos attēlā un pārblīvēta fona problēmas, pētnieki mēģināja skaitīt cilvēkus izmantojot regresiju. Parasti, regresija šādos risinājumos tiek veikta starp dažādām attēla īpašībām un objektu skaitu. Šāds risinājums sadala attēlu vairākos mazākos attēlos un katram šim mazajam attēlam tiek veikta aptuvenā skaita noteikšana izmantojot segmentācijas metodes. Lai noteiktu kopējo cilvēku skaitu attēlā, ir jāsaskaita katra mazā attēla aptuvenie novērtējumi. Lai apmācītu šādu sistēmu, pirmais no attēla apstrādes posmiem ir atmest attēla fonu un veikt \textit{ground-truth} novērtējumu, kas nozīmē, ka tiek manuāli izskaitīts cilvēku skaits katrā sadalītajā attēlā  \cite{chan2009bayesian,ryan2009crowd,chen2012feature}.
@@ -380,12 +379,12 @@ Attēlā 2.6 ir attēlota \textit{SSD} arhitektūra, kur parādīts, ka šī obj
 
 \textit{MultiBox} ir ierobežojošo logu regresijas metode, kas balstīta uz \textit{SSD} izstrādātāju pētījumu par objektu ierobežojošo logu koordināšu priekšlikumiem \cite{szegedy2014scalable}, kur nav zināmas objektu klases. \textit{MultiBox} \textit{loss} funkcija apvieno divas objektu detektēšanas mērvienības: \textit{confidence loss} un \textit{location loss}. \textit{Confidence loss} mēra, cik pārliecināts ir tīkls, ka aprēķinātais ierobežojošais logs satur objektu. \textit{Location loss} mēra cik tālu no tīkla prognozētajiem ierobežojošajiem logiem atrodas \textit{ground-truth} ierobežojošie logi apmācības datos. \textit{MultiBox loss} aprēķina sekojoši:
 
-\begin{equation*}
+\begin{equation}
 \var{multibox_loss}
 = \var{confidence_loss}
 + \var{alpha}
 * \var{location_loss}
-\end{equation*}
+\end{equation}
 \textit{Alpha} minētajā vienādojumā palīdz balansēt \textit{location loss} vērtību. Līdzīgi kā citām dziļās mašīnmācīšanās sistēmām, ir nepieciešams atrast vienādojuma parametrus, kas vislabāk samazina \textit{loss} funkciju, tādējādi pietuvinot tīkla prognozes \textit{ground-truth} vērtībām.
 
 \textit{MultiBox} pētnieki veidojot šo metodi ieviesa jaunu terminu \textit{priors}. \textit{Priors} ir iepriekš aprēķināti, fiksēta izmēra ierobežojošie logi (\textit{Faster R-CNN} sistēmā šos logus sauc par \textit{anchors}), kas cieši sakrīt ar \textit{ground-truth} ierobežojošo logu izvietojumu. Balstoties uz šiem iepriekš aprēķinātajiem ierobežojošiem logiem, \textit{MultiBox} tos izmanto kā prognozes un mēģina regresēt tuvāk \textit{ground-truth} ierobežojošajiem logiem. Beigās \textit{MultiBox} saglabā tikai labākās prognozes ar minimizētām \textit{location loss} un \textit{confidence loss}. 
@@ -441,7 +440,67 @@ Sekošanas mērķis ir atrast objektu dotajā video kadrā, pieņemot, ka objekt
 
 Gala risinājuma izstrādes laikā tika apskatīti \textit{OpenCV} programmatūrā piedāvātie sekošanas algoritmi: \textit{Multiple Instance Learning} (MIL) un \textit{AdaBoost} kā arī \textit{SiamFC} sekošanas algoritms, kas neietilpst \textit{OpenCV} bibliotēkā, bet ir aprakstīts Luka Bertinetto pētījumā \cite{bertinetto2016fully}.
 
-\subsubsection{Multiple Instance Learning}
+\subsubsection{Multiple Instance Learning sekošanas algoritms}
+\textit{Multiple Instance Learning} jeb MIL sekošanas algoritma apmācības laikā, apmācības datu piemēri algoritmam ir nodoti kopās, kuras dēvē par "somām" un marķējumi (no angļu val. \textit{labels}) tiek piešķirti visai somai un nevis individuālām instancēm. Ja soma ir marķēta kā pozitīva, tad tiek pieņemts, ka somā ir vismaz viens pozitīvs piemērs, pretējā gadījumā soma ir marķēta kā negatīva. Objektu detektēšanas problēmu risināšanā, pozitīva soma var saturēt vairākus iespējamos ierobežojošos logus ap kādu iepriekš atrastu objektu. Pēc tam šīs somas nodod apmācības algoritmam un šī algoritma uzdevums ir atrast kura instance katrā pozitīvajā somā ir visprecīzākā. 
 
-\subsubsection{AdaBoost}
-\subsubsection{SiamFC}
+MIL sekošanas algoritma sistēma sastāv no trīs komponentēm: attēla reprezentācijas, izskata modeļa un kustības modeļa. Izskata modelis sastāv no diskriminējoša (no angļu val. \textit{discriminative}) klasifikatora kas ir spējīgs atgriezt varbūtību $ p(y = 1|x) $, kur \textit{x} ir attēla apgabals un \textit{y} ir binārs mainīgais, kas norāda vai  interesējošais objekts atrodas attēla apgabalā. Katrā solī \textit{t}, sekošanas algoritms saglabā objekta atrašanās vietu $ l_t $. Katrā nākamajā kadrā tiek izgriezti vairāki attēla apgabali $ X^s = [x|s > ||  l(x) - l_{t-1}]$, kas atrodas dotajā brīdī atrastā objekta meklēšanas rādiusā \textit{s} un aprēķina $p(y|x)$ visiem \textit{x}. Pēc tam tiek atjaunota sekošanas algoritma atrašanās vieta:
+
+\begin{equation}
+l_t = l (argmax_{x} p(y|x))
+\end{equation}
+
+Tas nozīmē, ka katrā kadrā netiek saglabātas mērķu atrašanās vietas, tā vietā tiek izmantots kustības modelis un  sekošanas algoritma atrašanās vieta tiek salīdzināta ar iepriekšējā iterācijā atrasto atrašanās vietu.
+\begin{equation}
+p(l_t|l_t-1) \infty 
+\begin{cases} 
+1 & if ||l_t - l_{t-1}|| < s \\
+0 & otherwise
+\end{cases}
+\end{equation}
+Lai ietaupītu skaitļošanas resursus un vienkāršības nolūkos šis algoritms neizmanto citu kustības informāciju kā objekta izmēru maiņas vai rotācijas informāciju.
+
+Pēc sekošanas algoritma atrašanās vietas atjaunošanas ir nepieciešams atjaunot izskata modeli. Tiek iegūti attēla apgabali $ X^r =
+x|r > ||l(x)-l_t||
+$ un ja \textit{r} (apgabala rādiuss) atrodas sekošanas algoritma rādiusā, tad doto attēlu apgabalu somu marķē kā pozitīvu. Lai iegūtu negatīvos piemērus, tiek izgriezti attēla apgabali apļveida reģionā\\ $X^{r,\beta} = 
+x|\beta > || l(x) - l_t|| > r$. Šādi iegūti attēlu apgabali dos ļoti lielu negatīvo piemēru datu kopu, tāpēc no šīs kopas kā negatīvos piemērus izmantos tikai gadījuma lieluma apakškopu ar attēlu apgabaliem\cite{babenko2009visual}.\\ MIL sekošanas algoritmu var aprakstīt ar pseidokodu:
+\begin{algorithm}
+	\caption{MIL sekošana}\label{euclid}
+	\begin{algorithmic}[1]
+		\item[\textbf{Ievades dati:}] Attēls
+		\State Izgūst attēla apgabalus, $ 
+		X^s = \left\{\begin{array}{lr}
+		x|s > || l(x) - l_{t-1} ||
+		\end{array}\right\} $
+		\State Izmanto MIL klasifikatoru, lai noteiktu $p(y=1|x)$ katram \textit{x}
+		\State Atjauno sekošanas algoritma atrašanās vietu $l_t = l (argmax_{x} p(y|x))$
+		\State Izgriež pozitīvo un negatīvo piemēru attēlu apgabalus
+		\State Atjauno MIL izskata modeli
+	\end{algorithmic}
+\end{algorithm}
+\subsubsection{AdaBoost sekošanas algoritms}
+Pieņemot, ka detektējamais objekts jau ir atrasts, \textit{AdaBoost} sekošanas algoritms pieņem, ka dotais attēla reģions ir pozitīvs piemērs sekošanas algoritmam. Lai iegūtu negatīvos piemērus, tiek izgūti tāda paša izmēra reģioni no atrastā objekta apkārtnes. Šos piemērus izmanto, lai izveidotu vairākas \textit{boosting} algoritma iterācijas, kas iegūtu stabilu sekošanas modeli. Šie soļi gan ir nepieciešami tikai lai inicializētu sekošanas algoritmu, pats sekošanas solis ir balstīts uz veidņu (no angļu val. \textit{template}) sekošanas principu \cite{hager1998efficient}. Katrā reģionā klasifikators veic novērtējumu un iegūst pārliecības vērtības. Pārliecību karti analizē un pārvieto sekošanas algoritmu uz reģionu ar augstāko pārliecības novērtējumu. Pēc tam, kad objekts atrasts jaunajā kadrā, klasifikatoru ir nepieciešams atjaunot, lai tas varētu izšķirt objekta izskata izmaiņas vai lai tas varētu atšķirt fonu no meklējamā objekta. Reģions kurā atrodas sekošanas algoritms tiek padots klasifikatoram kā pozitīvais piemērs un apkārtējie reģioni tiek padoti klasifikatoram kā negatīvie piemēri priekš klasifikatora atjaunošanas. Apstrādājot jaunus kadrus, visa minētā procedūra tiek atkārtota un klasifikators ir spējīgs pielāgoties iespējamajām objekta izskata izmaiņām un fona trokšņiem.
+
+\textit{AdaBoost} jeb \textit{Adaptive Boosting} algoritms spēj ģenerēt klasifikatorus, kurus var efektīvi atjaunināt, iteratīvi padodot tam jaunus piemērus. Lai labāk saprastu šo algoritmu ir nepieciešams izskaidrot sekojošas definīcijas:
+\begin{itemize}
+	\item \textbf{Vājš klasifikators:} Klasifikators, kas darbojas tikai nedaudz labāk kā nejauša minēšana (piemēram, bināru lēmumu pieņemšanā, kļūdai jābūt mazākai par 50\%). Vāja klasifikatora izdarīto prognozi apzīmē ar $h^{weak}$.
+	\item \textbf{Selektors:} Pieņemot, ka ir kopa ar vājiem klasifikatoriem, kuri apzīmēti ar $H^{weak} = [h^{weak}_1,...,h^{weak}_M]$, selektors izvēlas vienu no šiem klasifikatoriem $h^{sel}(x) = h^{weak}_m(x)$, kur \textit{m} ir izvēlēts atkarībā no optimizācijas kritērija. Piemēram, var izmantot katra vājā klasifikatora kļūdu $e_i$ un izvēlēties mazāko, tas nozīmē, ka $m = argmin_ie_i$.
+	\item \textbf{Spēcīgs klasifikators:} Pieņemot, ka ir kopa ar vājiem klasifikatoriem, spēcīgs klasifikators tiek aprēķināts kā selektoru lineāra kombinācija. 
+\end{itemize}
+
+\textit{Boosting} algoritma galvenā doma ir selektoru ieviešana. Tie tiek nejauši inicializēti un katrs satur atšķirīgu īpašību no vājajiem klasifikatoriem. Kad algoritmam tiek padots jauns piemērs apmācībai, katra selektora vājie klasifikatori tiek atjaunoti. Pēc katra algoritma iterācijas ir pieejams spēcīgs klasifikators, bet vissliktāko vājo klasifikatoru aizstāj ar jaunu, nejauši izvēlētu.
+
+\subsubsection{SiamFC sekošanas algoritms}
+\textit{SiamFC} sekošanas algoritms piedāvā apmācīt funkciju $f(z,x)$, kas salīdzina vienāda izmēra parauga attēlu \textit{z} ar piedāvāto attēlu \textit{x} un atgriež novērtējumu cik ļoti abi attēli attēlo to pašu objektu. Šādu apmācību sauc par līdzības apmācību (no angļu val. \textit{similarity learning}). Lai atrastu objekta pozīciju jaunajā attēlā, tiek izsmeļoši pārbaudītas visas iespējamās atrašanās vietas un izvēlēts kandidāts ar augstāko līdzību iepriekšējā kadrā redzētajam objektam. Minēto funkciju \textit{f} apmāca, izmantojot datu kopas ar video, kuros norādīta objektu kustību trajektorija. 
+
+Tā kā datorredzes problēmu risināšanai veiksmīgi tiek izmantoti konvolūciju neironu tīkli, tos iespējams pielietot arī šajā gadījumā. Konvolūcijas neironu tīkls tiks izmantots kā funkcija \textit{f}. Līdzības apmācību, izmantojot konvolūcijas neironu tīklus, parasti veido izmantojot Siāmas (no angļu val. \textit{Siamese}) arhitektūras \cite{taigman2014closing,bromley1994signature}. Siāmas tīkli abiem ievades attēliem veic identisku transformāciju $\phi$ un apvieno iegūtās reprezentācijas citā funkcijā \textit{g}, izmantojot sakarību $f(z,x) = g(\phi(z),\phi(x))$.
+
+\begin{figure}[h]%
+	\centering
+	\includegraphics[height=4cm]{images/siamfcarch.png} %
+	\caption{Pilnīgās konvolūcijas Siāmas arhitektūra \cite{bertinetto2016fully}}%
+	\label{fig:example}%
+\end{figure} 
+
+Attēlā 2.26 ir redzama pilnīgās konvolūcijas Siāmas arhitektūra, ko izmanto šis sekošanas algoritms. Izvades dati ir rezultātu karte ar skalārām vērtībām, kuras dimensiju skaits ir atkarīgs no ievades attēla \textit{x} izmēra. Attēlā parādītajā rezultātu kartē ar sarkano un zilo pikseli ir atzīmētas vietas, kuras satur līdzības ievades attēlos.  
+
+Sekošanas laikā, algoritms izmanto attēlu, kurā atzīmēta sekošanas mērķa atrašanās vieta iepriekšējā kadrā. Izmantojot augstākās rezultātu kartes vērtības un neironu tīkla parametrus, ir iespējams aprēķināt aptuveno objekta pārvietojumu starp kadriem. Kad ir noteikta aptuvenā atrašanās vieta, tiek pielietots konvolūcijas neironu tīkls, kas meklēs objektu dažādos izmēros objekta apvidū dotajā kadrā.
