@@ -82,26 +82,24 @@ Līdzīgi kā \textit{SSD} gadījumā, arī apmācot \textit{YOLO} detektēšana
 
 Attēlā 3.3, \textit{YOLO} objektu detektēšanas sistēma ir spējusi atrast visus 6 attēlā esošos, interesējošos objektus, kamēr attēlā ar augstu cilvēku blīvumu, detektēšana ir krietni vājāka. Kā iemeslu vājajai detektēšanai attēlos ar augstu cilvēku blīvumu, var minēt \textit{YOLO} algoritma nianses. Režģi, kuros sadala attēlu pārklājas vairākiem objektiem un \textit{YOLO} sagādā problēmas mazu objektu detektēšana. Šo problēmu var daļēji novērst, detektēšanas laikā, padot sistēmai attēlus ar augstāku izšķirtspēju, lai režģu izveidošana attēlam ir vienmērīgāka, taču šāds process tērētu lielākus skaitļošanas resursus. 
 \section{Detektēšanas un sekošanas algoritmu implementācija}
-Pēc tīkla apmācības gan \textit{caffe}, gan \textit{darknet} ietvars atgriež modeļus ar tīkla svariem. Izmantojot šos modeļus, ir iespējams veikt objektu detektēšanu attēlos. Abi ietvari piedāvā sagatavotas metodes objektu detektēšanai, balstoties uz no apmācības iegūtajiem modeļiem, programmēšanas valodā \textit{Python}. Šīs metodes abiem ietvariem ir pilnīgi atšķirīgas un tās apraksta abu detektēšanas algoritmu darbību. Ja neskaita labojumus, kas tika veikti sakarā ar detektēšanai padoto datu formātu un klašu skaitu, abu ietvaru piedāvātās metodes objektu detektēšanai darbojās un tām nebija nepieciešamas korekcijas. Gan \textit{caffe}, gan \textit{darknet} ietvari piedāvā \textit{detect} funkcijas, implementētas \textit{Python} programmēšanas valodā. Abiem ietvariem šīs funkcijas atgriež visu atrasto objektu ierobežojošo logu koordinātes, klases nosaukumu un ar kādu pārliecību sistēma domā, ka atrastais objekts pieder minētajai klasei. Vienīgā lieta kas mainās šo funkciju atgrieztajos rezultātos ir informācijas formatējums un gala risinājuma implementāciju tas ļoti neietekmē. Ņemot vērā minēto informāciju, var secināt, ka pēc detektēšanas posma, pārējā risinājuma implementācija abām detektēšanas sistēmām būs vienāda. Lai izvairītos no atkārtošanās, šīs sadaļas ietvaros tiks apskatīta tikai \textit{SSD} detektēšanas sistēmas un dažādu sekošanas algoritmu apvienošana vienā risinājumā.
-\paragraph{Sekošana pēc detektēšanas ar \textit{OpenCV} bibliotēkā piedāvātajiem risinājumiem} //TODO, jāpievieno par LOI un skaitīšanu 
+Pēc tīkla apmācības gan \textit{caffe}, gan \textit{darknet} ietvars atgriež modeļus ar tīkla svariem. Izmantojot šos modeļus, ir iespējams veikt objektu detektēšanu attēlos. Abi ietvari piedāvā sagatavotas metodes objektu detektēšanai, balstoties uz no apmācības iegūtajiem modeļiem, programmēšanas valodā \textit{Python}. Šīs metodes abiem ietvariem ir pilnīgi atšķirīgas un tās apraksta abu detektēšanas algoritmu darbību. Ja neskaita labojumus, kas tika veikti sakarā ar detektēšanai padoto datu formātu un klašu skaitu, abu ietvaru piedāvātās metodes objektu detektēšanai darbojās un tām nebija nepieciešamas korekcijas. Gan \textit{caffe}, gan \textit{darknet} ietvari piedāvā \textit{detect} funkcijas, implementētas \textit{Python} programmēšanas valodā. Abiem ietvariem šīs funkcijas atgriež visu atrasto objektu ierobežojošo logu koordinātes, klases nosaukumu un ar kādu pārliecību sistēma domā, ka atrastais objekts pieder minētajai klasei. Vienīgā lieta kas mainās šo funkciju atgrieztajos rezultātos ir informācijas formatējums un gala risinājuma implementāciju tas ļoti neietekmē. Ņemot vērā minēto informāciju, var secināt, ka pēc detektēšanas posma, pārējā risinājuma implementācija abām detektēšanas sistēmām būs vienāda. Lai izvairītos no atkārtošanās, šīs sadaļas ietvaros tiks apskatīta tikai \textit{SSD} detektēšanas sistēmas un \textit{OpenCV} sekošanas algoritmu apvienošana vienā risinājumā, jo darba ietvaros \textit{SiamFC} algoritmu praktiski implementēt neizdevās, lai gan tika apskatīta šī algoritma implementācija \textit{PyTorch} un \textit{TensorFlow} ietvaros \cite{siamfcrepo1,siamfcrepo2}. 
+\paragraph{Sekošana pēc detektēšanas ar \textit{OpenCV} bibliotēkā piedāvātajiem risinājumiem} 
 \hfill\par
 \textit{OpenCV} ir atvērtā koda datorredzes un mašīnmācīšanās programmatūras bibliotēka, kurā ir implementēti arī divi no trim darbā apskatītajiem sekošanas algoritmiem: \textit{MIL} jeb \textit{Multiple Instance Learning} un \textit{AdaBoost} sekošanas algoritmi. Pirmais solis sekošanas risinājuma izveidē ir video interesējošā reģiona izvēlēšanās (ir iespējams izvēlēties, ka detektēšana un sekošana nenotiek visā video laukumā, bet tikai daļā no video) un sekotāja (no angļu val. \textit{tracker}) uzstādīšana. Kad tas izdarīts, tiek atvērts video fragments un detektēšanas algoritms apskata vienu kadru pēc otra, līdz atrasts kāds no interesējošajiem objektiem, šajā gadījumā cilvēku galvas. Kad detektēšanas sistēma ir atradusi objektu, no objekta koordinātēm tiek izveidots ierobežojošais logs, tas tiek parādīts un notiek sekotāja inicializēšana šajā ierobežojošajā logā. Nākamajos kadros no jauna notiek objektu detektēšana un jaunu sekotāju inicializēšana un tiek atjaunotas iepriekšējos kadros izveidoto sekotāju atrašanās vietas.  
 
-Papildus dažādu sekošanas algoritmu implementācijām, \textit{OpenCV} programmatūras bibliotēka piedāvā arī metodes, kas var atvieglo darbu ar attēliem un video fragmentiem.  
+Papildus dažādu sekošanas algoritmu implementācijām, \textit{OpenCV} programmatūras bibliotēka piedāvā arī metodes, kas var atvieglot darbu ar attēliem un video fragmentiem kā arī kalpo datu vizualizācijai. Šīs metodes kā arī citas attēlu pārveidojumu operācijas netiks aprakstītas.
+
 \begin{lstlisting}[language=Python]
 roi = cv2.selectROI(firstFrame,False)
+line = cv2.selectROI(firstFrame,False)
 tracker = cv2.MultiTracker_create()   
 while(videoFile.isOpened()):  
 	ret, frame = videoFile.read()     
 	result = detection.detect(frame)    
 \end{lstlisting}
-Šajā koda fragmentā ir atlasītas svarīgas inicializācijas metodes. Šajās koda rindās uzskaitītas metodes, kas inicializē reģionu kurā veiks detektēšanu un sekošanu. Tiek inicializēts \textit{OpenCV} piedāvātais \textit{MultiTracker} objekts \cite{multitrack}, kas ļauj vienlaikus uzturēt vairākus aktīvus sekotājus. Ciklā tiek atvērts video fragments un atlasīts kadrs, kuram veic detektēšanas operāciju. Nākamās koda rindas darbojas ar detektēšanas procesā atrastajiem objektiem.
+Šajā koda fragmentā ir atlasītas svarīgas inicializācijas metodes. Šajās koda rindās uzskaitītas metodes, kas inicializē reģionu kurā veiks detektēšanu un sekošanu, kā arī līniju, kuru izmantos cilvēku skaitīšanai. Tiek inicializēts \textit{OpenCV} piedāvātais \textit{MultiTracker} objekts \cite{multitrack}, kas ļauj vienlaikus uzturēt vairākus aktīvus sekotājus. Ciklā tiek atvērts video fragments un atlasīts kadrs, kuram veic detektēšanas operāciju. Nākamās koda rindas darbojas ar detektēšanas procesā atrastajiem objektiem.
 
-\begin{lstlisting}[basicstyle=\tiny]
-detectCenter = (int((xmin + xmax)*0.5),int((ymin+ymax)*0.5))   
-if (roi[1] < detectCenter[1] < roi[1]+roi[3] and roi[0] < detectCenter[0] < roi[0]+roi[2]):
-	cv2.rectangle(frame,(xmin, ymin), (xmax, ymax),(255, 0, 0),3)            
-	cv2.putText(frame,item[-1] + str(item[-2]),(xmin,ymin), font, 0.5,(255,255,255),2,cv2.LINE_AA)                   
+\begin{lstlisting}           
 	if not boxCenters:
 		tracker.add(cv2.TrackerMIL_create(), frame, bbox)
 	else:
@@ -115,3 +113,24 @@ if (roi[1] < detectCenter[1] < roi[1]+roi[3] and roi[0] < detectCenter[0] < roi[
 		tracker.add(cv2.TrackerMIL_create(), frame, bbox)
 ok, boxes = tracker.update(frame)
 \end{lstlisting}
+
+Šī koda daļa tiek izpildīta visiem detektēšanas laikā atrastajiem objektiem. Mainīgais \textit{boxCenters} satur sarakstu ar visu aktīvo sekotāju ierobežojošo logu viduspunktiem. Tiek pārbaudīts vai detektēšanas laikā atrastais objekts atrodas šajā sarakstā, ja nē, tad tiek noteikta atrastā objekta Eiklīda distance līdz visiem aktīvajiem sekotājiem un ja tā ir mazāka par 100, tad pieņem, ka detektētajam objektam līdz šim vēl netiek sekots un tiek inicializēts jauns sekotājs, ar 15. rindā redzamo komandu. Šajā brīdī izvēlas kādu no \textit{OpenCV} piedāvātajiem sekošanas algoritmiem izmantot. Šī darba ietvaros tiks salīdzināti \textit{OpenCV} piedāvātie \textit{TrackerMIL} (MIL sekošanas algoritms) un \textit{TrackerBoosting} (AdaBoost sekošanas algoritms) sekošanas algoritmu rezultāti. Pēdējā koda fragmenta rinda atjauno visus eksistējošos sekotājus ar jaunajām koordinātēm. 
+
+Pēdējais posms gala risinājumā ir cilvēku skaitīšana. Līnijas izvēli izdara sistēmas lietotājs, diemžēl \textit{OpenCV} nepiedāvā funkcionalitāti izvēlēties interesējošo līniju, bet izmantojot \textit{OpenCV} piedāvāto reģiona izvēlēšanās funkcionalitāti \textit{selectROI} no atlasītā reģiona tiek savienoti \textit{(xmin,ymin)} ar \textit{(xmax,ymax)}, tādā veidā iegūstot līniju, kuru šķērsojot tiks skaitītas cilvēku galvas.
+
+\begin{lstlisting}
+	boxCenters = list()
+	for idx,newbox in enumerate(boxes):            
+		p1 = (int(newbox[0]), int(newbox[1]))
+		p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+		center = ((int((newbox[0]+int(newbox[0] + newbox[2]))*0.5)),(int((newbox[1]+int(newbox[1] + newbox[3]))*0.5)))
+		finishcenters.append(center)
+		if (roi[1] < center[1] < roi[1]+roi[3] and roi[0] < center[0] < roi[0]+roi[2]) and ok:
+		boxCenters.append(center)
+		cv2.rectangle(frame, p1, p2, (0,255,0))
+		if (countLine[0] is not None and idx<len(tempCenters) and idx<len(boxCenters)):
+			if(tempCenters[idx][1]< countLine[0][1] and boxCenters[idx][1] >= countLine[0][1]) or 	(tempCenters[idx][1]<countLine[1][1] and boxCenters[idx][1] >= countLine[1][1]):
+				count = count+1
+\end{lstlisting}
+
+Šis koda fragments uzzīmē vizualizācijā jaunās sekotāja ierobežojošos logus un pārbauda vai laikā starp iepriekšējo kadru un šī brīža kadru, sekotāju logu centri nav šķērsojoši iezīmēto līniju. Ja līnija ir šķērsota, tad tiek palielināts mainīgais, kas atbildīgs par skaitu. Pilnais \textit{SSD} detektēšanas sistēmas un sekošanas algoritmu implementācijas kods bez labojumiem ir pievienots pielikumā \ref{appendix:pielikums3} un \textit{YOLO} detektēšanas sistēmas implementācijas pilnais kods ir pievienots pielikumā \ref{appendix:pielikums4}.

@@ -27,7 +27,7 @@ Distance starp hiperplakni un tuvākajiem katras klases datu punktiem sauc par r
 \paragraph{Lēmumu koki}
 \hfill\par
 Lēmumu koki atspoguļo reālās dzīves koka struktūru un tos izmanto gan klasifikācijas, gan regresijas problēmu risināšanā. Analizējot datus, lēmumu kokus var izmantot, lai vizuāli aprakstītu lēmumus un lēmumu pieņemšanu. Mašīnmācīšanās gadījumā, lēmumu kokus apraksta kā klasifikācijas kokus vai regresijas kokus (\textit{CART - Classification and Regression Trees}), atkarībā no veicamā uzdevuma.  Galvenā šo koku doma ir audzēt zarus, pieņemot lēmumus, kuras koka īpašības izvēlēties, zinot apstāšanās nosacījumu \cite{dectree}. Lai gan lēmumu koki nav vispopulārākais mašīnmācīšanās veids, tas tiek pielietots klasifikācijas problēmu risināšanai dotajos pētījumos \cite{dectreepaper,pal2003assessment}.
-
+\newpage
 \paragraph{Ģenētiskie algoritmi}
 \hfill\par
 Ģenētiskie algoritmi ir vēl viens algoritmu veids, kuru ir vērts izcelt. Tie ir algoritmi, kuri tiek izveidoti, balstoties uz notikumiem, kurus novēro dabīgajos evolūcijas procesos. Datorzinātnē ģenētiskie algoritmi ir optimizācijas algoritmi, kuri prot patstāvīgi apgūt jaunu informāciju, balstoties uz evolūcijas jēdzieniem kā dabīgā atlase un ģenētika. Ģenētisko algoritmu pamatideja ir simulēt Čārlza Dārvina piedāvāto teorēmu "izdzīvo stiprākais". Risinot problēmu, ģenētiskais algoritms saglabā tikai spēcīgākos indivīdus katrā paaudzē. Šie indivīdi sacenšas par resursiem un iespēju veidot nākamo paaudzi. Jaunās paaudzes tiek veidotas izvēloties vecākus no iepriekšējās paaudzes, veicot \textit{crossover} operāciju un mutāciju. Spēcīgākie indivīdi katrā paaudzē izveidos vairāk pēcnācēju nekā vājie indivīdi, tādējādi katra nākamā indivīdu paaudze kļūs labāka, galu galā iegūstot labāko rezultātu problēmas risināšanai. Beigu nosacījumu nosaka pirms algoritma izpildes, parasti, tiek noteikts paaudžu skaits vai kāds labāko indivīdu rezultātu slieksnis, kuru pēcnācēju paaudze pārsniedz. Ģenētiskie algoritmi gan nespēj risināt klasifikācijas problēmas, bet tos var lietot kā optimizācijas funkciju \cite{genopti} vai kā kārtošanas algoritmu \cite{deb2000fast}. Ģenētiskos algoritmus var izmantot lai aprēķinātu neironu tīklu svarus \cite{genalg}.
@@ -58,6 +58,7 @@ Mašīnmācīšanās no dziļās mašīnmācīšanās atšķiras ar to, ka maš�
 	\caption{Mašīnmācīšanās un dziļās mašīnmācīšanās salīdzinājums}%
 	\label{fig:example}%
 \end{figure}
+
 Dziļā mašīnmācīšanās ļauj apmācīt matemātiskus modeļus, kas izveidoti no vairākiem datu apstrādes slāņiem, ar datiem, kas attēloti kā vairāku līmeņu abstrakcija (pētamā objekta galveno īpašību izdalīšana un mazsvarīgu aspektu ignorēšana). Šīs metodes ir uzlabojušas jaunākās tehnoloģijas balss atpazīšanā, objektu atpazīšanā attēlos, objektu detektēšanā. Dziļā mašīnmācīšanās, izmantojot atpakaļdatošanas algoritmus, sarežģītās datu kopu struktūrās meklē kā datoram vai jebkurai citai ierīcei būtu jāmaina iekšējie parametri starp tīklu slāņiem.
 
 Īpašību apmācība ir metožu kopums, kas atļauj ierīcei padot neapstrādātus datus un automātiski iegūt īpašības, kas nepieciešamas, lai veiktu detektēšanu vai klasifikāciju. Dziļās mašīnmācīšanās metodes ir īpašību apmācības metodes ar vairākiem īpašību slāņiem, kurus iegūst apvienojot vienkāršus, taču nelineārus modeļus, kur katrs modelis pārveido īpašību no viena līmeņa uz augstāku, abstraktāku līmeni. Veicot pietiekami daudz šādus pārveidojumus, algoritmiem ir iespējams iemācīties ļoti sarežģītas darbības.\cite{deepnet} Darba ietvaros, datu klasifikācijai tiks izmantots konvolūciju neironu tīkls (\textit{CNN}), kas ir dziļās mašīnmācīšanās tips.
@@ -179,7 +180,7 @@ No augstāk minēto arhitektūru aprakstiem, var izdarīt secinājumu, ka paliel
 
 Neskaitot lielo slāņu skaitu,    \textit{ResNet} tīklu struktūra no pārējām, jau minētajām, arhitektūrām atšķirt tas, ka \textit{ResNet} sastāv no "atlikumu blokiem" (no angļu val. \textit{residual blocks}). Šo bloku galvenā doma ir saglabāt tajā padoto informāciju un pievienot to izejošajai informācijai, nevis pilnībā aizmirst ievades datus kā tas notiek citās arhitektūrās \cite{he2016deep}. 
 
-\begin{figure}[h]%
+\begin{figure}[H]%
 	\centering
 	\includegraphics[height=4cm]{images/resnet.png} %
 	\caption{\textit{ResNet} atlikumu bloks \cite{he2016deep}}%
@@ -290,7 +291,8 @@ Tā kā mūsdienās klasifikācijā un atpazīšanas uzdevumu risināšanā ļot
 	\item Šīs metodes neietver kontekstuālu informāciju, kas ir svarīgi, lai iegūtu labākus rezultātus;
 	\item Lai gan eksistējošie risinājumi izmanto regresiju ar pūļa blīvuma kartēm, šie risinājumi ir vairāk balstīti uz skaitīšanas kļūdas samazināšanu, nevis blīvuma karšu kvalitātes uzlabošanu;
 \end{itemize}
-\newpage
+
+
 Šī darba ietvaros tiks veikta skaitīšana pēc detektēšanas. Tas nozīmē, ka tiks izmantots atsevišķs objektu detektēšanas risinājums, kas objektus lokalizēs pēc konvolūciju neironu tīkla klasifikācijas atrastās klases. Kad lokalizētas visas objekta instances, skaitīšanas uzdevums paliek elementārs. Taču objektu detektēšanas problēmām nav atrasti risinājumi, kas strādā nevainojami, it īpaši, ja vairākas objektu instances attēlā pārklājas. Vienkāršākie objektu detektēšanas risinājumi balstās uz divām operācijām: izveidot reālu vērtību pārliecības (no angļu val. \textit{confidence}) karti un izmantojot šo karti, tiek meklētas augstās vērtības, kas atbilst individuālām objektu instancēm. Vairākas metodes pieņem, ka attēlos ir vairāki vienādi objekti un tos vienu no otra var atšķirt izmantojot \textit{Monte-Carlo} procesu \cite{descombes2009object}, morfoloģisko analīzi \cite{selinummi2005software} un variāciju optimizāciju \cite{nath2006cell}. Mūsdienās, populārākās un precīzākās metodes objektu detektēšanai ir \textit{YOLO} (\textit{You Only Look Once}) \cite{redmon2016you}, \textit{Faster-RCNN} (\textit{Faster Region-Based Convolutional Neural Network}) \cite{ren2015faster} un \textit{SSD} (\textit{Single Shot MultiBox Detector}) \cite{liu2016ssd}.
 \subsubsection{YOLO (\textit{You Only Look Once})}
 \textit{YOLO} pārveido objektu detektēšanas problēmu par vienkāršas regresijas problēmu, veicot regresiju starp attēla pikseļiem, ierobežojošo logu (no angļu val. \textit{bounding box}) koordinātēm un klašu varbūtībām. Viens konvolūciju neironu tīkls vienlaicīgi veic daudz ierobežojošo logu prognozes un klašu varbūtības šiem logiem. Šādam modelim ir vairākas priekšrocības salīdzinājumā ar citām objektu detektēšanas metodēm: 
@@ -367,7 +369,7 @@ Līdzīgi kā pēc RPN soļa, pēc R-CNN soļa ir iegūti objekti, kuriem ir atr
 	\item \textit{\textbf{MultiBox}} : ir ierobežojošo logu regresijas tehnika, kuru izveidoja pētnieki, kas strādāja ar pie \textit{SSD} izveides;
 	\item  \textit{\textbf{Detector}} : \textit{SSD} sistēmā neironu tīkls ir objektu detektors, kas arī klasificē detektētos objektus;
 \end{itemize}
-\newpage
+
 \begin{figure}[h]%
 	\centering
 	\includegraphics[height=4.5cm]{images/ssdarch.png} %
@@ -410,7 +412,7 @@ vērtības šai īpašību kartei.
 Attēlā 2.7 ir parādīts, ka apmācības laikā \textit{SSD} ir tikai nepieciešams ievades attēls un \textit{ground-truth} logi, kas atspoguļo objektus attēlā. Izmantojot konvolūcijas principus, tiek novērtēti daži ierobežojošie logi, dažādos attēla mērogos un tie tiek uzglabāti īpašību kartēs ar dažādiem izmēriem (attēlā 2.8 ir parādīta 8x8 izmēra īpašību karte un attēlā 2.9 4x4 izmēra īpašību karte). Katram logam aprēķina formas nobīdi no patiesās un pārliecības vērtības katrai objektu kategorijai (attēlā 2.9 c1,c2,...,cp). Apmācības laikā, definētie logi tiek pieskaņoti \textit{ground-truth} logiem. Piemēram, attēlā 2.7 parādīts, ka divi ierobežojošie logi ir pieskaņoti kaķim un sunim. Modeļa \textit{loss} (modeļa kopējā precizitāte ņemot vērā apmācības un validācijas datus) ir svērtā summa starp \textit{localization loss} un \textit{confidence loss}. 
 
 Līdzīgi \textit{Faster-RCNN}, arī \textit{SSD} kā vienu no pēdējiem soļiem tīkla izpildes laikā izmanto \textit{non-maximum suppression} (NMS). Pēc detektēšanas soļa iegūtie logi tiek šķiroti pēc norādīta sliekšņa, kas atkarīgs no \textit{confidence loss} vērtības. Tikai labākos logus saglabā un pārējie (mazāks \textit{confidence loss} par sliekšņa vērtību) tiek atmesti. NMS pielietošana nodrošina, ka tikai labākās logu prognozes tīkls saglabās un trokšņainās atmetīs.
- \newpage
+
 \begin{figure}[h]%
 	\centering
 	\includegraphics[height=4cm]{images/nms.png} %
@@ -426,12 +428,12 @@ Līdzīgi \textit{Faster-RCNN}, arī \textit{SSD} kā vienu no pēdējiem soļie
 	\item \textit{SSD} vāji strādā ar maziem objektiem, jo tie var neuzrādīties visās īpašību kartēs. Palielinot ievades attēlu izšķirtspēju ir iespējams samazināt šo problēmu.
 \end{itemize}
 
-Ņemot vērā tikai pētījumos \cite{redmon2016you,ren2015faster,liu2016ssd} pieejamo informāciju, dotajā brīdī, \textit{Faster R-CNN} ir labākā objektu detektēšanas sistēma, ja vērā ņem tikai precizitātes vērtējumus un lietotājam ir pieejami neierobežoti skaitļošanas resursi. Ja lietotājiem ir ierobežoti skaitļošanas resursi, \textit{SSD} ir labākais ātruma un precizitātes kompromiss. Ja par precizitāti nav jāuztraucas, bet ir vēlme pēc ļoti ātras sistēmas, tad labākais variants ir \textit{YOLO}. Lai gan \textit{Faster R-CNN} labāk par pārējiem spēj atrast maza izmēra objektus, sistēma ir lēna un nenodrošina reālā laika detektēšanu. Gan \textit{YOLO}, gan \textit{SSD} sistēmas nodrošina reālā laika objektu detektēšanu, kas ir nepieciešams šī darba ietvaros. Ņemot vērā augstāk minēto informāciju, pētījuma ietvaros radītais risinājums izmantos \textit{SSD} objektu detektēšanas sistēmu, jo tā ir labākā precizitātes un ātruma apvienojums un apmācību ir iespējams veikt ar lietotājiem pieejamākām ierīcēm. 
+Ņemot vērā tikai pētījumos \cite{redmon2016you,ren2015faster,liu2016ssd} pieejamo informāciju, dotajā brīdī, \textit{Faster R-CNN} ir labākā objektu detektēšanas sistēma, ja vērā ņem tikai precizitātes vērtējumus un lietotājam ir pieejami neierobežoti skaitļošanas resursi. Ja lietotājiem ir ierobežoti skaitļošanas resursi, \textit{SSD} ir labākais ātruma un precizitātes kompromiss. Ja par precizitāti nav jāuztraucas, bet ir vēlme pēc ļoti ātras sistēmas, tad labākais variants ir \textit{YOLO}. Lai gan \textit{Faster R-CNN} labāk par pārējiem spēj atrast maza izmēra objektus, sistēma ir lēna un nenodrošina reālā laika detektēšanu. Gan \textit{YOLO}, gan \textit{SSD} sistēmas nodrošina reālā laika objektu detektēšanu, kas ir nepieciešams šī darba ietvaros. Ņemot vērā augstāk minēto informāciju, izstrādājot gala risinājumu, tiks apskatītas \textit{YOLO} un \textit{SSD} objektu detektēšanas sistēmas. 
 
 \section{Sekošanas algoritmi}
 Pēc objektu detektēšanas metodes izvēlēšanās, šī pētījuma ietvaros ir nepieciešams apskatīt sekošanas risinājumus, kuru izmantot gala risinājumā. Lai veiksmīgi veiktu cilvēku plūsmas analīzi, ar izvēlēto objektu detektēšanas metodi vien nepietiek, objektiem ir arī jāseko. Šādā risinājumā ir vērtīgi ieviest sekošanas risinājumu sekojošu iemeslu dēļ:
 \begin{itemize}
-	\item Sekošanas algoritmi darbojas ātrāk kā detektēšanas algoritmi. Šādu argumentu var izskaidrot ar to, ka sekojot objektam, kas jau ir atrasts iepriekšējā kadrā, sistēmai ir pieejama informācija par objekta attēlojumu, atrašanās vietu, kustības virzienu un kustības ātrumu. Sekošanas algoritms izmantos visu šo informāciju, lai nepazaudētu objekta atrašanās vietu, kamēr objektu detektēšanas algoritmam katrs katrs ir jāapstrādā no jauna.
+	\item Sekošanas algoritmi darbojas ātrāk kā detektēšanas algoritmi. Šādu argumentu var izskaidrot ar to, ka sekojot objektam, kas jau ir atrasts iepriekšējā kadrā, sistēmai ir pieejama informācija par objekta attēlojumu, atrašanās vietu, kustības virzienu un kustības ātrumu. Sekošanas algoritms izmantos visu šo informāciju, lai nepazaudētu objekta atrašanās vietu, kamēr objektu detektēšanas algoritmam katrs kadrs ir jāapstrādā no jauna.
 	\item Sekošanas algoritmi ir kā drošības tīkls gadījumā, ja detektēšanas risinājumi vairs nevar atrast kādu no iepriekšējos kadros noteiktajiem objektiem. Piemēram, ja starp objektu un video kameru nostājas šķērslis, tas detektēšanas risinājumiem sagādās pamatīgas problēmas, kamēr labs sekošanas risinājums nepazaudētu objekta atrašanās vietu.
 	\item Sekošanas algoritmi veido savienojumus starp video kadriem, tādā veidā saglabājot objekta identitāti.
 \end{itemize}

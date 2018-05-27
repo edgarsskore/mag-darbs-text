@@ -10,6 +10,8 @@
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage{listings}
+\usepackage{tocloft}
+\usepackage{float}
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
@@ -43,7 +45,7 @@
 %\usepackage{inconsolata}
 \lstset{
     language=bash, %% Troque para PHP, C, Java, etc... bash é o padrão
-    basicstyle=\ttfamily\small,
+    basicstyle=\tiny,
     numberstyle=\footnotesize,
     numbers=left,
     backgroundcolor=\color{gray!10},
@@ -54,8 +56,8 @@
     escapeinside={\%*}{*)},
     breaklines=true,
     breakatwhitespace=true,
-    framextopmargin=2pt,
-    framexbottommargin=2pt,
+    framextopmargin=1pt,
+    framexbottommargin=1pt,
     extendedchars=false,
     inputencoding=utf8
 }
@@ -149,6 +151,8 @@
 %%%% Titullapas beigas
 
 %%%% Satura rādītājs
+\setlength\cftparskip{2pt}
+\setlength\cftbeforechapskip{2pt}
 \tableofcontents
 
 %%%% 1.5 līiniju atstarpe starp rindām
@@ -204,10 +208,6 @@ In the first novel and radio series, a group of hyper-intelligent pan-dimensiona
 \end{abstract}
 }
 
-%%%% Nodaļa bez numerācijas
-\chapter*{Izmantotie saīsinājumi un termini}
-\addcontentsline{toc}{chapter}{Izmantotie saīsinājumi un termini}
-
 %%%  Sākas nodaļas
 \input{src/ch-ievads}
 \input{src/literaturas-apskats}
@@ -254,7 +254,7 @@ for subset in test trainval
 do
 python $root_dir/scripts/create_annoset.py --anno-type=$anno_type --label-map-file=$mapfile --min-dim=$min_dim --max-dim=$max_dim --resize-width=$width --resize-height=$height --check-label $extra_cmd $data_root_dir $root_dir/data/$dataset_name/$subset.txt $data_root_dir/$dataset_name/$db/$dataset_name"_"$subset"_"$db examples/$dataset_name
 \end{lstlisting}
-
+\addtocounter{nofappendices}{1}
 \chapter{Otrais pielikums}
 \label{appendix:pielikums2}
 \begin{lstlisting}
@@ -306,9 +306,487 @@ list_file.write('%s/VOCdevkit/VOC%s/JPEGImages/%s.jpg\n'%(wd, year, image_id))
 convert_annotation(year, image_id)
 list_file.close()
 \end{lstlisting}
-\addtocounter{nofappendices}{1}
+
+\chapter{Trešais pielikums}
+\label{appendix:pielikums3}
+\begin{lstlisting}
+#!/usr/bin/env python 
+#encoding=utf8
+'''
+Detection with SSD
+In this example, we will load a SSD model and use it to detect objects.
+'''
+
+import os
+import sys
+import argparse
+import numpy as np
+import cv2
+import math
+from PIL import Image, ImageDraw, ImageFont
+# Make sure that caffe is on the python path:
+caffe_root = './'
+os.chdir(caffe_root)
+sys.path.insert(0, os.path.join(caffe_root, 'python'))
+import caffe
+
+(major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+from google.protobuf import text_format
+from caffe.proto import caffe_pb2
 
 
+def get_labelname(labelmap, labels):
+num_labels = len(labelmap.item)
+labelnames = []
+if type(labels) is not list:
+labels = [labels]
+for label in labels:
+found = False
+for i in xrange(0, num_labels):
+if label == labelmap.item[i].label:
+found = True
+labelnames.append(labelmap.item[i].display_name)
+break
+assert found == True
+return labelnames
+
+class CaffeDetection:
+def __init__(self, gpu_id, model_def, model_weights, image_resize, labelmap_file):
+caffe.set_device(gpu_id)
+caffe.set_mode_gpu()
+
+self.image_resize = image_resize
+# Load the net in the test phase for inference, and configure input preprocessing.
+self.net = caffe.Net(model_def,      # defines the structure of the model
+model_weights,  # contains the trained weights
+caffe.TEST)     # use test mode (e.g., don't perform dropout)
+# input preprocessing: 'data' is the name of the input blob == net.inputs[0]
+self.transformer = caffe.io.Transformer({'data': self.net.blobs['data'].data.shape})
+self.transformer.set_transpose('data', (2, 0, 1))
+self.transformer.set_mean('data', np.array([104, 117, 123])) # mean pixel
+# the reference model operates on images in [0,255] range instead of [0,1]
+self.transformer.set_raw_scale('data', 255)
+# the reference model has channels in BGR order instead of RGB
+self.transformer.set_channel_swap('data', (2, 1, 0))
+
+# load PASCAL VOC labels
+file = open(labelmap_file, 'r')
+self.labelmap = caffe_pb2.LabelMap()
+text_format.Merge(str(file.read()), self.labelmap)
+
+def detect(self, image_file, conf_thresh=0.24, topn=5):
+'''
+SSD detection
+'''
+# set net to batch size of 1
+image_resize = 512
+self.net.blobs['data'].reshape(1, 3, self.image_resize, self.image_resize)
+#image = caffe.io.load_image(image_file) 
+image = image_file
+#Run the net and examine the top_k results
+transformed_image = self.transformer.preprocess('data', image)
+self.net.blobs['data'].data[...] = transformed_image
+
+# Forward pass.
+detections = self.net.forward()['detection_out']
+
+# Parse the outputs.
+det_label = detections[0,0,:,1]
+det_conf = detections[0,0,:,2]
+det_xmin = detections[0,0,:,3]
+det_ymin = detections[0,0,:,4]
+det_xmax = detections[0,0,:,5]
+det_ymax = detections[0,0,:,6]
+
+# Get detections with confidence higher than 0.6.
+top_indices = [i for i, conf in enumerate(det_conf) if conf >= conf_thresh]
+
+top_conf = det_conf[top_indices]
+top_label_indices = det_label[top_indices].tolist()
+top_labels = get_labelname(self.labelmap, top_label_indices)
+top_xmin = det_xmin[top_indices]
+top_ymin = det_ymin[top_indices]
+top_xmax = det_xmax[top_indices]
+top_ymax = det_ymax[top_indices]
+
+result = []
+for i in xrange(min(topn, top_conf.shape[0])):
+xmin = top_xmin[i] # xmin = int(round(top_xmin[i] * image.shape[1]))
+ymin = top_ymin[i] # ymin = int(round(top_ymin[i] * image.shape[0]))
+xmax = top_xmax[i] # xmax = int(round(top_xmax[i] * image.shape[1]))
+ymax = top_ymax[i] # ymax = int(round(top_ymax[i] * image.shape[0]))
+score = top_conf[i]
+label = int(top_label_indices[i])
+label_name = top_labels[i]
+result.append([xmin, ymin, xmax, ymax, label, score, label_name])
+return result
+
+def main(args):
+'''main '''
+'''defining detection and video'''
+videoFile = cv2.VideoCapture(args.video)
+detection = CaffeDetection(args.gpu_id,args.model_def,args.model_weights,args.image_resize,args.labelmap_file)
+init_once = False
+vlength = int(videoFile.get(cv2.CAP_PROP_FRAME_COUNT))    
+'''Going through video'''
+trackerlist = list()
+boxCenters = list()
+buul,firstFrame = videoFile.read()
+firstFrame = cv2.resize(firstFrame, (0,0), fx=01, fy=01)
+roi = cv2.selectROI(firstFrame,False)
+line = cv2.selectROI(firstFrame,False)
+countLine = ((line[0],line[1]),(line[0] + line[2],line[1]+line[3]))
+cv2.destroyAllWindows() 
+result = list()
+finishcenters =list()
+tracker = cv2.MultiTracker_create()  
+framez = 0 
+count = 0;
+while(videoFile.isOpened()):  
+framez = framez +1
+ret, frame = videoFile.read()
+if framez >= 0:
+frame = cv2.resize(frame, (0,0), fx=1, fy=1)        
+im = Image.fromarray(frame)      
+result = detection.detect(frame)        
+width, height = im.size
+font = cv2.FONT_HERSHEY_SIMPLEX  
+for item in result:
+newTracker = False              
+xmin = int(round(item[0] * width))
+ymin = int(round(item[1] * height))
+xmax = int(round(item[2] * width))
+ymax = int(round(item[3] * height))
+bbox = (int(xmin), int(ymin), int(xmax-xmin), int(ymax-ymin))
+detectCenter = (int((xmin + xmax)*0.5),int((ymin+ymax)*0.5))   
+if (roi[1] < detectCenter[1] < roi[1]+roi[3] and roi[0] < detectCenter[0] < roi[0]+roi[2]):
+cv2.rectangle(frame,(xmin, ymin), (xmax, ymax),(255, 0, 0),3)            
+cv2.putText(frame,item[-1] + str(item[-2]),(xmin,ymin), font, 0.5,(255,255,255),2,cv2.LINE_AA)                   
+if not boxCenters:
+tracker.add(cv2.TrackerMIL_create(), frame, bbox)
+else:
+newTracker = False
+distanceList = list()
+for cent in boxCenters:
+distanceList.append(math.sqrt( ((cent[0]-detectCenter[0])**2)+((cent[1]-detectCenter[1])**2)))
+if min(distanceList)>100:
+newTracker = True
+if newTracker:
+tracker.add(cv2.TrackerMIL_create(), frame, bbox)
+ok, boxes = tracker.update(frame)
+tempCenters = boxCenters
+boxCenters = list()
+for idx,newbox in enumerate(boxes):            
+p1 = (int(newbox[0]), int(newbox[1]))
+p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+center = ((int((newbox[0]+int(newbox[0] + newbox[2]))*0.5)),(int((newbox[1]+int(newbox[1] + newbox[3]))*0.5)))
+finishcenters.append(center)
+if (roi[1] < center[1] < roi[1]+roi[3] and roi[0] < center[0] < roi[0]+roi[2]) and ok:
+boxCenters.append(center)
+cv2.rectangle(frame, p1, p2, (0,255,0))
+if (countLine[0] is not None and idx<len(tempCenters) and idx<len(boxCenters)):
+if(tempCenters[idx][1]< countLine[0][1] and boxCenters[idx][1] >= countLine[0][1]) or (tempCenters[idx][1]<countLine[1][1] and boxCenters[idx][1] >= countLine[1][1]):
+count = count+1
+cv2.putText(frame, "Count:" + str(len(boxCenters)), (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2); 
+cv2.line(frame,countLine[0],countLine[1],(255,0,0),1)
+
+frame = cv2.resize(frame, (0,0), fx=0.5, fy=0.5)
+cv2.imshow('frame',frame)
+if cv2.waitKey(1) & 0xFF == ord('q'):
+
+for item in finishcenters:
+cv2.circle(frame, (item[0],item[1]), 3  , (0,255,0), thickness=5, lineType=1, shift=0)
+#frame[item[1]][item[0]] = [255,255,255]
+cv2.rectangle(frame, (roi[0], roi[1]), (roi[0]+roi[2], roi[1]+roi[3]), (255,0,0), 2)
+cv2.imshow('frame',frame)
+cv2.waitKey(0)
+videoFile.release()
+out.release()
+#cv2.destroyAllWindows()
+
+def parse_args():
+'''parse args'''
+parser = argparse.ArgumentParser()
+parser.add_argument('--gpu_id', type=int, default=0, help='gpu id')
+parser.add_argument('--labelmap_file',
+default='data/VOC0712/labelmap_voc.prototxt')
+parser.add_argument('--model_def',
+default='models/VGGNet/VOC0712/SSD_512x512/deploy.prototxt')
+parser.add_argument('--image_resize', default=512, type=int)
+parser.add_argument('--model_weights',
+default='models/VGGNet/VOC0712/SSD_512x512/VGG_VOC0712_SSD_512x512_iter_124340.caffemodel')
+parser.add_argument('--video', default='/home/edgars/Desktop/MD/caffe/examples/videos/horiz1.mp4')
+return parser.parse_args()
+
+if __name__ == '__main__':
+main(parse_args())
+
+\end{lstlisting}
+\chapter{Ceturtais pielikums}
+\label{appendix:pielikums4}
+\begin{lstlisting}
+#=====================darknet.py============================
+from ctypes import *
+import math
+import random
+
+def sample(probs):
+s = sum(probs)
+probs = [a/s for a in probs]
+r = random.uniform(0, 1)
+for i in range(len(probs)):
+r = r - probs[i]
+if r <= 0:
+return i
+return len(probs)-1
+
+def c_array(ctype, values):
+return (ctype * len(values))(*values)
+
+class BOX(Structure):
+_fields_ = [("x", c_float),
+("y", c_float),
+("w", c_float),
+("h", c_float)]
+
+class DETECTION(Structure):
+_fields_ = [("bbox", BOX),
+("classes", c_int),
+("prob", POINTER(c_float)),
+("mask", POINTER(c_float)),
+("objectness", c_float),
+("sort_class", c_int)]
+
+
+class IMAGE(Structure):
+_fields_ = [("w", c_int),
+("h", c_int),
+("c", c_int),
+("data", POINTER(c_float))]
+
+class METADATA(Structure):
+_fields_ = [("classes", c_int),
+("names", POINTER(c_char_p))]
+
+
+
+#lib = CDLL("/home/pjreddie/documents/darknet/libdarknet.so", RTLD_GLOBAL)
+lib = CDLL("/home/edgars/Desktop/yolo/____darknet/libdarknet.so", RTLD_GLOBAL)
+lib.network_width.argtypes = [c_void_p]
+lib.network_width.restype = c_int
+lib.network_height.argtypes = [c_void_p]
+lib.network_height.restype = c_int
+
+predict = lib.network_predict
+predict.argtypes = [c_void_p, POINTER(c_float)]
+predict.restype = POINTER(c_float)
+
+set_gpu = lib.cuda_set_device
+set_gpu.argtypes = [c_int]
+
+make_image = lib.make_image
+make_image.argtypes = [c_int, c_int, c_int]
+make_image.restype = IMAGE
+
+get_network_boxes = lib.get_network_boxes
+get_network_boxes.argtypes = [c_void_p, c_int, c_int, c_float, c_float, POINTER(c_int), c_int, POINTER(c_int)]
+get_network_boxes.restype = POINTER(DETECTION)
+
+make_network_boxes = lib.make_network_boxes
+make_network_boxes.argtypes = [c_void_p]
+make_network_boxes.restype = POINTER(DETECTION)
+
+free_detections = lib.free_detections
+free_detections.argtypes = [POINTER(DETECTION), c_int]
+
+free_ptrs = lib.free_ptrs
+free_ptrs.argtypes = [POINTER(c_void_p), c_int]
+
+network_predict = lib.network_predict
+network_predict.argtypes = [c_void_p, POINTER(c_float)]
+
+reset_rnn = lib.reset_rnn
+reset_rnn.argtypes = [c_void_p]
+
+load_net = lib.load_network
+load_net.argtypes = [c_char_p, c_char_p, c_int]
+load_net.restype = c_void_p
+
+do_nms_obj = lib.do_nms_obj
+do_nms_obj.argtypes = [POINTER(DETECTION), c_int, c_int, c_float]
+
+do_nms_sort = lib.do_nms_sort
+do_nms_sort.argtypes = [POINTER(DETECTION), c_int, c_int, c_float]
+
+free_image = lib.free_image
+free_image.argtypes = [IMAGE]
+
+letterbox_image = lib.letterbox_image
+letterbox_image.argtypes = [IMAGE, c_int, c_int]
+letterbox_image.restype = IMAGE
+
+load_meta = lib.get_metadata
+lib.get_metadata.argtypes = [c_char_p]
+lib.get_metadata.restype = METADATA
+
+load_image = lib.load_image_color
+load_image.argtypes = [c_char_p, c_int, c_int]
+load_image.restype = IMAGE
+
+rgbgr_image = lib.rgbgr_image
+rgbgr_image.argtypes = [IMAGE]
+
+predict_image = lib.network_predict_image
+predict_image.argtypes = [c_void_p, IMAGE]
+predict_image.restype = POINTER(c_float)
+
+def array_to_image(arr):
+print arr
+arr = arr.transpose(2,0,1)
+c = arr.shape[0]
+h = arr.shape[1]
+w = arr.shape[2]
+arr = (arr/255.0).flatten()
+data = c_array(c_float, arr)
+im = IMAGE(w,h,c,data)
+return im
+def classify(net, meta, im):
+out = predict_image(net, image)
+res = []
+for i in range(meta.classes):
+res.append((meta.names[i], out[i]))
+res = sorted(res, key=lambda x: -x[1])
+return res
+
+def detect(net, meta, image, thresh=.3, hier_thresh=.5, nms=.45):
+
+
+im = load_image(image, 0, 0)
+num = c_int(0)
+pnum = pointer(num)
+predict_image(net, im)
+dets = get_network_boxes(net, im.w, im.h, thresh, hier_thresh, None, 0, pnum)
+num = pnum[0]
+if (nms): do_nms_obj(dets, num, meta.classes, nms);
+
+res = []
+for j in range(num):
+for i in range(meta.classes):
+if dets[j].prob[i] > 0:
+b = dets[j].bbox
+res.append((meta.names[i], dets[j].prob[i], (b.x, b.y, b.w, b.h)))
+res = sorted(res, key=lambda x: -x[1])
+free_image(im)
+free_detections(dets, num)
+return res
+#=======================================
+#==========detector.py==================
+from ctypes import *
+import math
+import random
+import os
+import sys
+import argparse
+import numpy as np
+import cv2
+from PIL import Image, ImageDraw, ImageFont
+sys.path.append(os.path.join(os.getcwd(),'python/'))
+import natsort
+import darknet as dn
+import pdb
+def unique(list1):
+	# intilize a null list
+	unique_list = []
+	# traverse for all elements
+	for x in list1:
+	# check if exists in unique_list or not
+	if x not in unique_list:
+	unique_list.append(x)
+	return unique_list
+	
+net = dn.load_net("/home/edgars/Desktop/yolo/darknet/build/darknet/x64/cfg/yolo-obj.cfg", "/home/edgars/Desktop/yolo/darknet/build/darknet/x64/backup/yolo-obj_8500.weights", 0)
+meta = dn.load_meta("/home/edgars/Desktop/yolo/darknet/build/darknet/x64/data/obj.data")
+im = "/home/edgars/Desktop/yolo/____darknet/data/crowd2.jpg"
+#cap = cv2.VideoCapture("/home/edgars/Desktop/MD/caffe/examples/videos/ILSVRC2015_train_00755001.mp4")
+directory = '/home/edgars/Downloads/train/tempvid'
+allfiles = os.listdir(directory)
+allfiles = natsort.natsorted(allfiles)
+firstimage = '/home/edgars/Downloads/train/tempvid/'+allfiles[0]
+print firstimage
+firstimage2 = cv2.imread(firstimage) 
+firstFrame = firstimage2#cv2.resize(firstimage2, (0,0), fx=1, fy=1)
+roi = cv2.selectROI(firstFrame,False)
+line = cv2.selectROI(firstFrame,False)
+countLine = ((line[0],line[1]),(line[0] + line[2],line[1]+line[3]))
+result = list()
+tracker = cv2.MultiTracker_create()    
+trackerlist = list()
+boxCenters = list()
+finishcenters =list()
+cv2.destroyAllWindows() 
+framez = 0
+for filename in allfiles:
+	framez = framez +1
+	print framez
+	if framez > 0:
+		if filename.endswith(".png") or filename.endswith(".jpg") or filename.endswith(".jpeg"): 
+			image = '/home/edgars/Downloads/train/tempvid/'+filename
+			arr = cv2.imread(image)  
+			frame = cv2.resize(arr, (0,0), fx=1, fy=1)        
+			im = Image.fromarray(frame)      
+			result = dn.detect(net,meta,image)
+			width, height = im.size
+			font = cv2.FONT_HERSHEY_SIMPLEX  
+			for item in result:
+				newTracker = False
+				xmin = int(round(item[2][0]))
+				ymin = int(round(item[2][1]))
+				xmax = int(round(item[2][0])+round(item[2][2]))
+				ymax = int(round(item[2][1])+round(item[2][3]))
+				bbox = (int(xmin), int(ymin), int(xmax-xmin), int(ymax-ymin))
+				detectCenter = (int((xmin + xmax)*0.5),int((ymin+ymax)*0.5))
+				finishcenters.append(detectCenter)
+				if (roi[1] < detectCenter[1] < roi[1]+roi[3] and roi[0] < detectCenter[0] < roi[0]+roi[2]):
+					cv2.rectangle(frame,(xmin, ymin), (xmax, ymax),(255, 0, 0),3)
+					cv2.putText(frame,item[-1] + str(item[-2]),(xmin,ymin), font, 0.5,(255,255,255),2,cv2.LINE_AA)
+					if not boxCenters:
+						tracker.add(cv2.TrackerMIL_create(), frame, bbox)
+					else:
+						newTracker = False
+						distanceList = list()
+						if boxCenters is not None:
+							boxCenters = unique(boxCenters)
+						for cent in boxCenters:
+							distanceList.append(math.sqrt( ((cent[0]-detectCenter[0])**2)+((cent[1]-detectCenter[1])**2)))
+						if min(distanceList)>150:
+							newTracker = True
+				if newTracker:
+					tracker.add(cv2.TrackerMIL_create(), frame, bbox)
+					ok, boxes = tracker.update(frame)
+					tempCenters = boxCenters
+					boxCenters = list()
+				for idx,newbox in enumerate(boxes):
+					p1 = (int(newbox[0]), int(newbox[1]))
+					p2 = (int(newbox[0] + newbox[2]), int(newbox[1] + newbox[3]))
+					center = ((int((newbox[0]+int(newbox[0] + newbox[2]))*0.5)),(int((newbox[1]+int(newbox[1] + newbox[3]))*0.5)))
+				if (roi[1] < center[1] < roi[1]+roi[3] and roi[0] < center[0] < roi[0]+roi[2]) and ok:
+					boxCenters.append(center)
+					cv2.rectangle(frame, p1, p2, (0,255,0))
+				if ok is not True:
+					tracker = cv2.MultiTracker_create() 
+				if (countLine[0] is not None and idx<len(tempCenters) and idx<len(boxCenters)):
+					if(tempCenters[idx][1]< countLine[0][1] and boxCenters[idx][1] >= countLine[0][1]) or (tempCenters[idx][1]<countLine[1][1] and boxCenters[idx][1] >= countLine[1][1]):
+					count = count+1
+
+cv2.putText(frame, "Count:" + str(len(boxCenters)), (100,20), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (50,170,50),2); 
+cv2.rectangle(frame, (roi[0], roi[1]), (roi[0]+roi[2], roi[1]+roi[3]), (255,0,0), 2)
+cv2.line(frame,countLine[0],countLine[1],(255,0,0),1)
+for item in finishcenters:
+	cv2.circle(frame, (item[0],item[1]), 3  , (0,255,0), thickness=5, lineType=1, shift=0)
+	cv2.imshow('frame',frame)
+	cv2.waitKey(0)
+#=======================================
+\end{lstlisting}
 %% Vēl jāpievieno atzīmes lapa
 \pagebreak
 %% Šai lapai nevajag numerāciju
