@@ -100,58 +100,31 @@ Tā kā video fragments attēlā 4.10. ir ļoti zemas izšķirtspējas, visi obj
 \paragraph{Secinājumi}
 \hfill\par
 \begin{enumerate}
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
+	\item Jaunākie risinājumi balss atpazīšanā, objektu klasifikācijā un objektu detektēšanā ir veidoti izmantojot dziļās mašīnmācīšanās metodes.
+	\item Konvolūcijas neironu tīkli vislabāk risina detektēšanas, segmentācijas un klasifikācijas problēmas.
+	\item \textit{VGG Net} konvolūcijas neironu tīklu arhitektūra ir labi optimizēta, lai nebūtu nepieciešami ļoti lieli skaitļošanas resursi, tai pat laikā atgriežot kvalitatīvus rezultātus.
+	\item Jo vairāk konvolūcijas slāņu (filtru) neironu tīklā, jo labāk šis tīkls veiks klasifikāciju, taču vairāk slāņu izmantošana nozīmē papildu skaitļošanas jaudas nepieciešamību.
+	\item Lai efektīvi darbotos ar konvolūciju neironu tīkliem, apmācību ir nepieciešams veikt, izmantojot grafisko procesoru, kam ir daudz vairāk skaitļošanas vienības kā centrālajiem procesoriem.
+	\item Dotajā brīdī, \textit{ReLU} ir labākā konvolūciju neironu tīklos izmantotā aktivizācijas funkcija. 
+	\item Izveidot savu konvolūcijas neironu tīklu arhitektūru ir viegli, taču, lai to padarītu labāku par jau eksistējošajām arhitektūrām, ir nepieciešams ieguldīt daudz laika pētījumos un eksperimentos.
+	\item Izvēloties programmatūras ietvarus darbam ar konvolūcijas neironu tīkliem ir pieejami daudz varianti, taču, lai izvēlētos īsto ir svarīgs gala risinājuma mērķis. Piemēram, \textit{Caffe} ir speciāli veidots darbam ar konvolūcijas neironu tīkliem un \textit{darknet} satur oriģinālo \textit{YOLO} implementāciju. 
+	\item Uz reģionu priekšlikumiem balstītās detektēšanas metodes var efektīvi izmantot, ja apmācībai ir pieejamas ierīces ar augstu skaitļošanas jaudu.
+	\item \textit{YOLO} ir ļoti ātra objektu detektēšanas sistēma.
+	\item \textit{SSD} detektēšanas sistēma ir labākais detektēšanas precizitātes un ātruma kompromiss.
+	\item Izmantojot augstas izšķirtspējas attēlus, apmācības laikā, var uzlabot detektēšanas sistēmas veiktspēju, taču tiek upurēti skaitļošanas resursi.
+	\item Objektu sekošanas algoritmus ir nepieciešams implementēt, lai nepazaudētu objektu, kad detektēšanas sistēmas vairs nevar to atrast.
+	\item Jo lielāka apmācības datu kopa, jo dažādākus objektus detektēšanas sistēmas var atrast.
+	\item Nepopulāras datu kopas (datu kopas, kas nav \textit{Pascal VOC, MS COCO, ILSVRC}) pielietotu ar populārākajiem konvolūcijas neironu tīklu programmatūras ietvariem, var nākties veikt datu pārveidojumus kā anotāciju formāta maiņu.
+	\item \textit{Python} programmēšanas valodā ir pieejamas daudz un dažādas datorredzes un mašīnmācīšanās programmatūras bibliotēkas. Šīs programmatūras bibliotēkas kā arī elementārā koda sintakse padara \textit{Python} programmēšanas valodu viegli izmantojamu, lai darbotos dziļās apmācības laukā.
+	\item Lai sasniegtu labākus detektēšanas sistēmu rezultātus, konvolūcijas neironu tīklu apmācība ir jāveic daudz ilgāk kā šī darba ietvaros.
+	\item \textit{AdaBoost} sekošanas algoritms darbojās ātrāk kā \textit{MIL}, taču \textit{MIL} algoritms uzrādīja labākus rezultātus.
+	\item Šī darba ietvaros praktiski implementētie sekošanas algoritmi nespēja atrast objektus, kad tie pazūd fonā aiz priekšplānā esošajiem objektiem.
+	\item Ja video fragments ir augstas izšķirtspējas un uzņemts ar kameru no paaugstināta skatu punkta, kur skaitīšanas līniju var novietot horizontāli un cilvēki pārvietojas vertikāli, tad, šī darba ietvaros izveidotais risinājums, teorētiski, būtu labi funkcionējošs.
 \end{enumerate}
 \paragraph{Priekšlikumi}
 \hfill\par
 \begin{enumerate}
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
-	\item 
+	\item Lai uzlabotu šī darba ietvaros izveidoto sistēmu, ir nepieciešams abas izmantotās detektēšanas sistēmas apmācīt ilgāk. Izmantotajā datu kopā ir vairāk kā 220 tūkstoš attēlu un šī darba ietvaros veiktās apmācības ilgums ir nepietiekams, lai iegūtu labākus rezultātus ar attēliem, kas nav no datu kopas.
+	\item Lai iegūtu labākus detektēšanas rezultātus un, pieņemot, ka ir pieejami neierobežoti skaitļošanas resursi, šī darba ietvaros \textit{VGG Net} konvolūcijas neironu tīklu arhitektūru būtu vērtīgi aizstāt ar \textit{ResNet} konvolūcijas neironu tīklu arhitektūru. \textit{ResNet} arhitektūra satur daudz vairāk slāņus un labāk detektē objektus, bet apmācība pieprasa augstu skaitļošanas jaudu. 
+	\item Lai uzlabotu sekošanas algoritmu veiktspēju, var izmantot uz konvolūcijas neironu tīklu apmācību balstītus sekošanas algoritmus. Darbā minētais \textit{SiamFC} ir viena no šādām sistēmām, kuru gan darba izstrādes laikā neizdevās praktiski implementēt. Papildu detektēšanas sistēmu apmācībai, nākamais solis risinājuma izstrādē būtu pielietot \textit{SiamFC} sekošanas sistēmu. 
 \end{enumerate}
