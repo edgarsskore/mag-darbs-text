@@ -46,7 +46,7 @@ Pēc datu sagatavošanas, \textit{YOLO} konfigurācijas failos ir jānorāda kur
 \end{enumerate}
 
 Pirmais minētais fails satur informāciju par klašu skaitu, norādi uz apmācības un validācijas failu apakškopām, norāde uz failu ar visu klašu nosaukumiem un norādi kur glabāt apmācītos modeļus. Šī darba nolūkos šis fails ir ar sekojošu struktūru: 
-\begin{lstlisting}
+\begin{lstlisting} 
 	classes= 1  
 	train  = obj/2012_train.txt  
 	valid  = obj/2012_test.txt  
@@ -89,7 +89,7 @@ Pēc tīkla apmācības gan \textit{caffe}, gan \textit{darknet} ietvars atgrie�
 
 Papildus dažādu sekošanas algoritmu implementācijām, \textit{OpenCV} programmatūras bibliotēka piedāvā arī metodes, kas var atvieglot darbu ar attēliem un video fragmentiem kā arī kalpo datu vizualizācijai. Šīs metodes kā arī citas attēlu pārveidojumu operācijas netiks aprakstītas.
 
-\begin{lstlisting}[language=Python]
+\begin{lstlisting} 
 roi = cv2.selectROI(firstFrame,False)
 line = cv2.selectROI(firstFrame,False)
 tracker = cv2.MultiTracker_create()   
@@ -99,14 +99,15 @@ while(videoFile.isOpened()):
 \end{lstlisting}
 Šajā koda fragmentā ir atlasītas svarīgas inicializācijas metodes. Šajās koda rindās uzskaitītas metodes, kas inicializē reģionu kurā veiks detektēšanu un sekošanu, kā arī līniju, kuru izmantos cilvēku skaitīšanai. Tiek inicializēts \textit{OpenCV} piedāvātais \textit{MultiTracker} objekts \cite{multitrack}, kas ļauj vienlaikus uzturēt vairākus aktīvus sekotājus. Ciklā tiek atvērts video fragments un atlasīts kadrs, kuram veic detektēšanas operāciju. Nākamās koda rindas darbojas ar detektēšanas procesā atrastajiem objektiem.
 
-\begin{lstlisting}           
+\begin{lstlisting}   
 	if not boxCenters:
 		tracker.add(cv2.TrackerMIL_create(), frame, bbox)
 	else:
 		newTracker = False
 		distanceList = list()
 		for cent in boxCenters:
-			distanceList.append(math.sqrt( ((cent[0]-detectCenter[0])**2)+((cent[1]-detectCenter[1])**2)))
+			distanceList.append(math.sqrt( ((cent[0]-detectCenter[0])**2)+
+											((cent[1]-detectCenter[1])**2)))
 		if min(distanceList)>100:
 			newTracker = True
 	if newTracker:
@@ -117,7 +118,7 @@ ok, boxes = tracker.update(frame)
 Šī koda daļa tiek izpildīta visiem detektēšanas laikā atrastajiem objektiem. Mainīgais \textit{boxCenters} satur sarakstu ar visu aktīvo sekotāju ierobežojošo logu viduspunktiem. Tiek pārbaudīts vai detektēšanas laikā atrastais objekts atrodas šajā sarakstā, ja nē, tad tiek noteikta atrastā objekta Eiklīda distance līdz visiem aktīvajiem sekotājiem un ja tā ir mazāka par 100, tad pieņem, ka detektētajam objektam līdz šim vēl netiek sekots un tiek inicializēts jauns sekotājs, ar 15. rindā redzamo komandu. Šajā brīdī izvēlas kādu no \textit{OpenCV} piedāvātajiem sekošanas algoritmiem izmantot. Šī darba ietvaros tiks salīdzināti \textit{OpenCV} piedāvātie \textit{TrackerMIL} (MIL sekošanas algoritms) un \textit{TrackerBoosting} (AdaBoost sekošanas algoritms) sekošanas algoritmu rezultāti. Pēdējā koda fragmenta rinda atjauno visus eksistējošos sekotājus ar jaunajām koordinātēm. 
 
 Pēdējais posms gala risinājumā ir cilvēku skaitīšana. Līnijas izvēli izdara sistēmas lietotājs, diemžēl \textit{OpenCV} nepiedāvā funkcionalitāti izvēlēties interesējošo līniju, bet izmantojot \textit{OpenCV} piedāvāto reģiona izvēlēšanās funkcionalitāti \textit{selectROI} no atlasītā reģiona tiek savienoti \textit{(xmin,ymin)} ar \textit{(xmax,ymax)}, tādā veidā iegūstot līniju, kuru šķērsojot tiks skaitītas cilvēku galvas.
-
+\newpage
 \begin{lstlisting}
 	boxCenters = list()
 	for idx,newbox in enumerate(boxes):            

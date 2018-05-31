@@ -1,0 +1,12 @@
+^^Iif not boxCenters:
+^^I^^Itracker.add(cv2.TrackerMIL_create(), frame, bbox)
+^^Ielse:
+^^I^^InewTracker = False
+^^I^^IdistanceList = list()
+^^I^^Ifor cent in boxCenters:
+^^I^^I^^IdistanceList.append(math.sqrt( ((cent[0]-detectCenter[0])**2)+((cent[1]-detectCenter[1])**2)))
+^^I^^Iif min(distanceList)>100:
+^^I^^I^^InewTracker = True
+^^Iif newTracker:
+^^I^^Itracker.add(cv2.TrackerMIL_create(), frame, bbox)
+ok, boxes = tracker.update(frame)

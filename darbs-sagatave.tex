@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{tocloft}
 \usepackage{float}
+
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
@@ -25,7 +26,8 @@
 \newfontfamily\sffamily{Verdana}
 \captionsetup{justification=centering}
 \usepackage{setspace}
-
+\newcommand{\nocontentsline}[3]{}
+\newcommand{\tocless}[2]{\bgroup\let\addcontentsline=\nocontentsline#1{#2}\egroup}
 % lai varam normāli rakstīt apakšvītras
 \usepackage{underscore}
 % Lai varam iekļaut attēlus
@@ -45,8 +47,8 @@
 %\usepackage{inconsolata}
 \lstset{
     language=bash, %% Troque para PHP, C, Java, etc... bash é o padrão
-    basicstyle=\tiny,
-    numberstyle=\footnotesize,
+    basicstyle=\small,
+    numberstyle=\small,
     numbers=left,
     backgroundcolor=\color{gray!10},
     frame=single,
@@ -62,22 +64,14 @@
     inputencoding=utf8
 }
 
-
-%% Mainīt chapteru izskatu - centrēts un definētais sffamily fonts (skatīt augstāk)
 \usepackage{titlesec}
 \titleformat{\chapter}{\huge\centering\sffamily}{\thechapter}{1pc}{}
 
-%% Pārdēvējam ``Literatūra`` par ``Izmantotās literatūras un avotu saraksts''.
 \addto\captionslatvian{
 \renewcommand\bibname{Izmantotās literatūras un avotu saraksts}
 }
-
-%% Atraitņrindiņas un bāreņrindiņas ( widow orphan) vadība
 \clubpenalty10000
 \widowpenalty10000
-
-%% Visādas atkāpes - 1" (2.54 cm) atkāpe jau ir pēc noklusējuma, šeit tikai korekcijas
-%\setlength{\parskip}{1line}
 \setlength{\topmargin}{0cm}
 \setlength{\headheight}{0in}
 \setlength{\headsep}{0in}
@@ -85,103 +79,67 @@
 \setlength{\textwidth}{15cm}
 \setlength{\oddsidemargin}{0.5in}
 \setlength{\evensidemargin}{0.5in}
-%\setlength{\parindent}{0.25in}
-%\setlength{\parskip}{0.25in}
-
-%% uzliekam atkāpes arī nodaļu 1. rindkopas 1. rindai
 \usepackage{indentfirst}
-
-%Pārnesumiem - ļauj tiasīt lielākas starpas
 \hyphenpenalty=5000
-
-%% Nodaļu un apakšnodaļu numerācija tagad to veic fixlatvian package
-%\def\thechapter      {\arabic{chapter}.}
-%\def\thesection      {\ifx\chapter\undefined{\arabic{section}.}\else  %{\thechapter\arabic{section}.}\fi}
-%\def\thesubsection   {\thesection\arabic{subsection}.}
-%\def\thesubsubsection{\thesubsection\arabic{subsubsection}.}
-%\def\theparagraph    {\thesubsubsection\arabic{paragraph}.}
-%\def\thesubparagraph {\theparagraph\arabic{subparagraph}.}
-
-%% Pakotne lai saliktu automātisku figūru skaitīšanu
 \usepackage{totcount}
-
 \newcounter{nofappendices}
 \setcounter{nofappendices}{0}
 \regtotcounter{nofappendices}
-
 \newtotcounter{fignum}
 \def\oldfigure{} \let\oldfigure=\figure
 \def\figure{\stepcounter{fignum}\oldfigure}
-
-%defineejam atsauču skaitītāju
 \newtotcounter{citnum}
 \def\oldbibitem{} \let\oldbibitem=\bibitem
 \def\bibitem{\stepcounter{citnum}\oldbibitem}
+\input{src/titullapas-dati}
+\usepackage{lipsum}
 
-%% Attēlu numerācija
-%\renewcommand{\thefigure}{\arabic{chapter}.\arabic{figure}.}
-
-\input{src/titullapas-dati} %šeit pārdefinējam savus mainīgos (atstāju iepriekšējās rindas, lai varētu redzēt pārdefinēšanu)
-
-%% pievienota anotācijas noformēšana
-%\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
-%\makeatletter
-%\patchcmd{\@makechapterhead}{\vspace*{50\p@}}{}{}{}% Removes space above \chapter head
-%\setafterchapterskip{1sp}
-%defineejam anotaacijas lapas, lai vareetu vienkaarshaak taas izmantot
 \def\abstract{
-  %\section*{\begin{center} \abstractname \end{center}} % start chapter
 
 \vspace*{-4\baselineskip}
 	\chapter*{\begin{center} \abstractname \end{center} } % start chapter
 	\vspace*{-2.5\baselineskip}
   \addcontentsline{toc}{chapter}{\abstractname} % table of contents line
   \markboth{\MakeUppercase{\abstractname}}{} % header mark
+  \thispagestyle{empty}
 }
 \def\endabstract{}%\clearpage
-
-%% Beidzot sākam rakstīt dokumentu
+\newenvironment{absolutelynopagebreak}
+{\par\nobreak\vfil\penalty0\vfilneg
+	\vtop\bgroup}
+{\par\xdef\tpd{\the\prevdepth}\egroup
+	\prevdepth=\tpd}
 \begin{document}
 
-%% Vislabāk nodaļas rakstīt kā atseviškus failus, kurus iekļauj ar input (.tex paplašinājums pats tiek pielikts klāt)
-% \input{src/mag-titullapa} %% visu titullapu ērtāk ir turēt datnē mag-titullapa.tex, bet te mēs tomēr visu rakstīsim vienā vietā:
-
-%%%% Titullapas sākums
-\input{src/titullapa} %pievienota titullapa, kura izveidota atsevišķā failā
-%%%% Titullapas beigas
-
-%%%% Satura rādītājs
-\setlength\cftparskip{2pt}
-\setlength\cftbeforechapskip{2pt}
-\tableofcontents
-
-%%%% 1.5 līiniju atstarpe starp rindām
+\input{src/titullapa}
 \onehalfspace
-
+\begin{absolutelynopagebreak}
 {
 	\selectlanguage{latvian}
 	\begin{abstract}
 		
 		\begin{tabular}{@{}r@{}l@{}}
-			\parbox[c]{0.3\textwidth}{\textbf{The title:}}&
-			\parbox[t]{0.65\textwidth}{\defDarbaNosaukumsEN} \\
-			\parbox[c]{0.3\textwidth}{\textbf{Autors:}}&
+			\parbox[c]{0.3\textwidth}{\textbf{Darba nosaukums:}}&
+			\parbox[t]{0.65\textwidth}{\defDarbaNosaukums} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Darba autors:}}&
 			\parbox[t]{0.65\textwidth}{\defAutors} \\
-			\parbox[c]{0.3\textwidth}{\textbf{Academic Advisor:}}&
+			\parbox[c]{0.3\textwidth}{\textbf{Zinātniskais vadītājs:}}&
 			\parbox[t]{0.65\textwidth}{\defZinVaditajs} \\
-			\parbox[c]{0.3\textwidth}{\textbf{The volume of the work:}}&
-			\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} pages, XX~tables,  \total{fignum}~images, XX~equations, \total{citnum}~literature sources, \total{nofappendices}~appendices} \\
-			\parbox[c]{0.3\textwidth}{\textbf{Keywords:}}&
-			\parbox[t]{0.65\textwidth}{ Life, Universe, Questions, Philosophy} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Darba apjoms:}}&
+			\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} lapas, 4 tabulas,  \total{fignum}~attēli, 5 vienādojumi, \total{citnum}~literatūras avoti, 4 pielikumi} \\
+			\parbox[c]{0.3\textwidth}{\textbf{Atslēgas vārdi:}}&
+			\parbox[t]{0.65\textwidth}{ Datorredze, Dziļā mašīnmācīšanās, Konvolūcijas neironu tīkli, Objektu detektēšana, Objektu sekošana} \\
 			&\\
 		\end{tabular}
-		%\total{nofimages} % ja nu gadiijumaa vajag custom counter
-		
-		In the first novel and radio series, a group of hyper-intelligent pan-dimensional beings demand to learn the \textbf{Answer to the Ultimate Question of Life} from the supercomputer, Deep Thought, specially built for this purpose. It takes Deep Thought 7½ million years to compute and check the answer, which turns out to be\textbf{ 42}.  Unfortunately, The Ultimate Question itself is unknown.\cite{wiki-en}
-		
+
+Cilvēku plūsmas analīze ir metožu kopums, kas sniedz iespēju no video datiem izgūt informāciju par cilvēku pārvietošanos konkrētā vietā. Pētniecības darba mērķis ir izstrādāt risinājumu, kas ļauj veikt cilvēku plūsmas analīzi, izmantojot konvolūcijas tīklu cilvēku noteikšanai un sekošanas algoritmus cilvēku izsekošanai video. Pirms risinājuma izveidošanas tika apskatītas eksistējošās plūsmas analīzes metodes, apskatīti un salīdzināti dažādas konvolūcijas neironu tīklu arhitektūras, objektu detektēšanas algoritmi un sekošanas algoritmi.
+
+Plūsmas analīzes algoritma implementācija tika veidota programmēšanas valodā \textit{Python}, izmantojot \textit{caffe} un \textit{darknet} ietvarus. Tika salīdzinātas abu minēto ietvaru piedāvātās \textit{SSD} un \textit{YOLO} objektu detektēšanas algoritmu implementācijas. Tika implementēti objektu sekošanas algoritmi, balstoties uz minēto detektēšanas sistēmu atgrieztajiem rezultātiem.
+
+Pēc plūsmas analīzes risinājuma izstrādes un rezultātu izvērtēšanas, var secināt, ka, praktiski implementētie sekošanas algoritmi nespēj atrast objektus, kad tie pazūd aiz priekšplānā esošajiem objektiem. Izmantojot video fragmentus, kas filmēti no paaugstināta skatu punkta, tādējādi samazinot iespēju objektiem pārklāties, darba ietvaros izstrādātais risinājums veiksmīgi darbotos.
 	\end{abstract}
 }
-
+\end{absolutelynopagebreak}
 %%%% 1.5 līiniju atstarpe starp rindām
 \onehalfspace
 {
@@ -196,42 +154,42 @@
 \parbox[c]{0.3\textwidth}{\textbf{Academic Advisor:}}&
 \parbox[t]{0.65\textwidth}{\defZinVaditajs} \\
 \parbox[c]{0.3\textwidth}{\textbf{The volume of the work:}}&
-\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} pages, XX~tables,  \total{fignum}~images, XX~equations, \total{citnum}~literature sources, \total{nofappendices}~appendices} \\
+\parbox[t]{0.65\textwidth}{\textcolor{black}{\pageref{LastPage}} pages, 4 tables,  \total{fignum}~images, 5 equations, \total{citnum}~literature sources, 4 appendices} \\
 \parbox[c]{0.3\textwidth}{\textbf{Keywords:}}&
-\parbox[t]{0.65\textwidth}{ Life, Universe, Questions, Philosophy} \\
+\parbox[t]{0.65\textwidth}{ Computer vision, Deep learning, Convolutional neural networks, Object detection, Object tracking} \\
 &\\
 \end{tabular}
 %\total{nofimages} % ja nu gadiijumaa vajag custom counter
 
-In the first novel and radio series, a group of hyper-intelligent pan-dimensional beings demand to learn the \textbf{Answer to the Ultimate Question of Life} from the supercomputer, Deep Thought, specially built for this purpose. It takes Deep Thought 7½ million years to compute and check the answer, which turns out to be\textbf{ 42}.  Unfortunat  ely, The Ultimate Question itself is unknown.\cite{wiki-en}
+Human flow analysis is a set of methods that, by using video processing, allows us to make conclusions of people movement. The aim of the paper was to create a solution that would allow analyzing human flow by using convolutional network for human detection and tracking algorithms for human tracking. Before coming up with the solution, the Author observed existing methods of the flow analysis, examined and compared various convolutional neural network architectures, object detection algorithms and the tracking algorithms.
+
+The implementation of the people flow algorithm was made in the programming language, \textit{Python}, using \textit{caffe} and \textit{darknet} frameworks. The author compared implementations of object detecting, offered by both \textit{SSD} and \textit{YOLO} frameworks. Object tracking algorithms were implemented based on the returned results of the already mentioned detection systems.
+
+After the development of the flow analysis algorithm and evaluation of the results the Author concludes that practically implemented tracking algorithms face difficulties when tracking objects that go into the background behind some other objects in the foreground. The developed solution would be successful if video fragments filmed from elevated point of view were used to minimize the possibility of object occlusion.
 
 \end{abstract}
 }
-
-%%%  Sākas nodaļas
+\newpage
+\setlength\cftparskip{2pt}
+\setlength\cftbeforechapskip{2pt}
+\tableofcontents
+\onehalfspace
 \input{src/ch-ievads}
 \input{src/literaturas-apskats}
 \input{src/implementacija} 
 \input{src/finish} 
-\bibliographystyle{unsrt}
+\bibliographystyle{ieeetr}
 \selectlanguage{latvian}
 \bibliography{src/links,src/articles,src/books}	%to load the *.bib files ../articles,../books,
 \addcontentsline{toc}{chapter}{Izmantotās literatūras un avotu saraksts}
 
-
-\chapter*{Galvojums}
-\addcontentsline{toc}{chapter}{Galvojums}
- Ar šo es, \defAutors, galvoju, ka maģistra darbs ir izpildīts patstāvīgi un bez citu palīdzības. No svešiem pirmavotiem ņemtie dati un definējumi ir uzrādīti darbā. Šis darbs tādā vai citādā veidā nav nekad iesniegts nevienai citai pārbaudījumu komisijai un nav nekur publicēts.
-
-\vspace{1in}
-\defGads.gada \rule{1cm}{0.2pt}.\rule{3cm}{0.2pt}
 \label{LastPage}
 
 %% Te vajadzētu pielikumus
 \appendix
 \chapter{Pirmais pielikums}
 \label{appendix:pielikums1}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\tiny]
 cur_dir=$(cd $( dirname ${BASH_SOURCE[0]} ) && pwd )
 root_dir=$cur_dir/../..
 cd $root_dir
@@ -257,7 +215,7 @@ python $root_dir/scripts/create_annoset.py --anno-type=$anno_type --label-map-fi
 \addtocounter{nofappendices}{1}
 \chapter{Otrais pielikums}
 \label{appendix:pielikums2}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\tiny]
 import xml.etree.ElementTree as ET
 import pickle
 import os
@@ -309,7 +267,7 @@ list_file.close()
 
 \chapter{Trešais pielikums}
 \label{appendix:pielikums3}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\tiny]
 #!/usr/bin/env python 
 #encoding=utf8
 '''
@@ -524,7 +482,7 @@ main(parse_args())
 \end{lstlisting}
 \chapter{Ceturtais pielikums}
 \label{appendix:pielikums4}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\tiny]
 #=====================darknet.py============================
 from ctypes import *
 import math
@@ -788,9 +746,36 @@ for item in finishcenters:
 #=======================================
 \end{lstlisting}
 %% Vēl jāpievieno atzīmes lapa
-\pagebreak
-%% Šai lapai nevajag numerāciju
 \pagestyle{empty}
+
+\addtocontents{toc}{\protect\enlargethispage{20\baselineskip}}
+\chapter*{Galvojums}
+\addcontentsline{toc}{chapter}{Galvojums}
+Ar šo es, \defAutors, galvoju, ka maģistra darbs ir izpildīts patstāvīgi un bez citu palīdzības. No svešiem pirmavotiem ņemtie dati un definējumi ir uzrādīti darbā. Šis darbs tādā vai citādā veidā nav nekad iesniegts nevienai citai pārbaudījumu komisijai un nav nekur publicēts.
+
+Esmu informēts (-a), ka mans maģistra darbs tiks ievietots un apstrādāts Vienotajā datorizētajā plaģiāta kontroles sistēmā plaģiāta kontroles nolūkos.
+
+\vspace{2cm}
+\defGads.gada \rule{1cm}{0.2pt}.\rule{3cm}{0.2pt}\hspace{4cm}\rule{4cm}{0.2pt}
+\vspace{1cm}
+
+Es, \defAutors, atļauju Ventspils Augstskolai savu maģistra darbu bez atlīdzības ievietot un uzglabāt Latvijas Nacionālās bibliotēkas pārvaldītā datortīklā Academia\\ (www.academia.lndb.lv), kurā tie ir pieejami gan bibliotēkas lietotājiem, gan globālajā tīmeklī tādā veidā, ka ikviens tiem var piekļūt individuāli izraudzītā laikā, individuāli izraudzītā vietā.
+
+
+\begin{flushright}
+	Piekrītu \rule{3cm}{0.2pt}
+	\vspace{1.5cm}
+	
+	Nepiekrītu \rule{3cm}{0.2pt}
+	
+\end{flushright}
+
+\vspace{1cm}
+\defGads.gada \rule{1cm}{0.2pt}.\rule{3cm}{0.2pt}
+
+\pagestyle{empty}
+
+\newpage
 \begin{center}
  Maģistra darbs aizstāvēts Valsts pārbaudījumu komisijas sēdē\\
  \vspace{1em}

@@ -1,8 +1,10 @@
 \chapter{Rezultāti}
 
-Lai gan ierobežotu skaitļošanas resursu dēļ abu darbā apskatīto detektēšanas sistēmu konvolūcijas neironu tīklu apmācība tika veikta ļoti neilgu laiku (aptuveni nedēļu), iegūtie rezultāti ir apmierinoši kā pamats nopietnākas cilvēku plūsmas analīzes sistēmas izstrādei. Darba izstrādes laikā autoram neizdevās praktiski implementēt \textit{SiamFC} sekošanas algoritmu, kas ir balstīts uz vairākiem neironu tīkliem un potenciāli varētu krietni uzlabot iegūtos rezultātus. Veidojot rezultātus, tiks salīdzināta objektu sekošana 3 dažādos video fragmentos ar 2 dažādām objektu detektēšanas sistēmām un 2 dažādiem sekošanas algoritmiem. Pēc abu detektēšanas sistēmu apmācības pirmie rezultāti, ko salīdzināt ir tīklu precizitātes metrika \textit{mAP}. \textit{Caffe} ietvarā \textit{SSD} detektēšanas sistēmai precizitāti var aprēķināt ietvara direktorijā izsaucot komandu \textit{"python examples/ssd/score_ssd_pascal.py"}, šī komanda atgrieza vērtību 71\%. \textit{Darknet} ietvarā \textit{YOLO} detektēšanas sistēmai precizitāti var aprēķināt ietvara direktorijā izsaucot komandu\textit{ "./darknet detector map data/obj.data cfg/yolo-obj.cfg backup/yolo-obj_24900.weights"}, šī komanda atgrieza vērtību 75\%. 
+Lai gan ierobežotu skaitļošanas resursu dēļ abu darbā apskatīto detektēšanas sistēmu konvolūcijas neironu tīklu apmācība tika veikta ļoti neilgu laiku (aptuveni nedēļu), iegūtie rezultātus var izmantot kā pamatu nopietnākas cilvēku plūsmas analīzes sistēmas izstrādei. Darba izstrādes laikā autoram neizdevās praktiski implementēt \textit{SiamFC} sekošanas algoritmu, kas ir balstīts uz vairākiem konvolūcijas neironu tīkliem un potenciāli varētu krietni uzlabot iegūtos rezultātus. Veidojot rezultātus, tiks salīdzināta objektu sekošana 3 dažādos video fragmentos ar 2 dažādām objektu detektēšanas sistēmām un 2 dažādiem sekošanas algoritmiem. Pēc abu detektēšanas sistēmu apmācības pirmie rezultāti, ko salīdzināt ir tīklu precizitātes metrika \textit{mAP}. \textit{Caffe} ietvarā \textit{SSD} detektēšanas sistēmai precizitāti var aprēķināt ietvara direktorijā izsaucot komandu \textit{"python examples/ssd/score_ssd_pascal.py"}, šī komanda atgrieza vērtību 71\%. \textit{Darknet} ietvarā \textit{YOLO} detektēšanas sistēmai precizitāti var aprēķināt ietvara direktorijā izsaucot komandu\textit{ "./darknet detector map data/obj.data cfg/yolo-obj.cfg backup/yolo-obj_24900.weights"}, šī komanda atgrieza vērtību 75\%. 
 
-Salīdzinot \textit{MIL} un \textit{AdaBoost} sekošanas algoritmus, \textit{MIL} algoritms strādāja daudz lēnāk un tērēja vairāk skaitļošanas resursu, kamēr \textit{AdaBoost} algoritms bija daudz ātrāks, taču nebija tik precīzs.
+Veidojot simulāciju, secīgi, katrs kadrs tika padots detektēšanas sistēmai, kas atgrieza pārliecības novērtējumus. Atgrieztie rezultāti satur atrasto objektu ierobežojošo logu izmērus, atrašanās vietu un pārliecību. Katram video fragmentam pārliecības slieksnis tika noteikts pēc iespējas mazāks, lai, izvairoties no nepareiziem detektēšanas rezultātiem, iegūtu visvairāk detekcijas. No detektēšanas iegūtajiem rezultātiem tika sākta sekošanas operācija, atzīmējot centrus kadros, kur pabijis sekotājs, lai varētu uzzīmēt kustības trajektoriju.
+
+Salīdzinot \textit{MIL} un \textit{AdaBoost} sekošanas algoritmus, \textit{MIL} algoritms strādāja daudz lēnāk un tērēja vairāk skaitļošanas resursu, kamēr \textit{AdaBoost} algoritms bija daudz ātrāks, taču nebija tik precīzs. Pētījumā \cite{lehtola2017evaluation} aprakstīts, ka \textit{AdaBoost} algoritms darbojās līdz 5 kadriem sekundē, kamēr \textit{MIL} algoritms darbojās ar 1 kadru sekundē, šādus rezultātus novēroju arī šī darba ietvaros. 
 
 \paragraph{\textit{SSD} detektēšanas sistēma ar \textit{OpenCV} sekošanas algoritmiem}
 \hfill\par
@@ -52,7 +54,7 @@ Līdz attēlā 4.4. redzamajam brīdim objektiem, kas ir tuvu filmēšanas punkt
 	\label{fig:example}%
 \end{figure}
 
-Attēlā 4.5. ir attēlots fragments no cita video, kas ir ļoti zemas izšķirtspējas un filmēts citā vidē. Dotais fragments ir pirmie video kadri, attēlā ir redzami daudz cilvēki, taču detektēšanas algoritms ir atradis tikai divus. Par iemeslu var uzskatīt ļoti zemo video fragmenta izšķirtspēju.
+Attēlā 4.5. ir attēlots fragments no cita video, kas ir ļoti zemas izšķirtspējas un filmēts citā vidē. Dotais fragments ir pirmie video kadri, attēlā ir redzami daudz cilvēki, taču detektēšanas algoritms ir atradis tikai divus. Par iemeslu var uzskatīt ļoti zemo video fragmenta izšķirtspēju vai apmācības datu nepietiekamību.
 
 \begin{figure}[h]%
 	\centering
@@ -63,7 +65,7 @@ Attēlā 4.5. ir attēlots fragments no cita video, kas ir ļoti zemas izšķirt
 
 Attēlā 4.6. ir attēlots brīdis no tā paša video, pāris sekundes vēlāk, kad rāmī ir parādījušies un uztverti 3 jauni objekti. Detektēšana gan tiem nav notikusi līdz ar parādīšanos interesējošajā reģionā, bet pāris kadrus vēlāk. 
 
-\textit{AdaBoost} sekošanas algoritms strādā gandrīz tik pat labi kā \textit{MIL} algoritms, brīžiem gan novērojami iztrūkumi, sekošanas laikā sekotājs brīžiem pazaudē objektu, bet ātri, pēc pāris kadriem, to atrod. Līdzīgi kā \textit{MIL} algoritmam, arī \textit{AdaBoost} netiek galā ar objektiem, kas video fragmentos novietojas aiz šķēršļiem, bet izpildes laikā ir ātrāks. Ja gala risinājumā nepieciešams izvēlēties starp \textit{MIL} un \textit{AdaBoost}, autors izvēlētos \textit{MIL}, jo, lai gan \textit{AdaBoost} ir nedaudz ātrāks, \textit{MIL} algoritms objektiem seko stabilāk.
+Apskatot sagatavotās sekošanas trajektorijas, var secināt, ka\textit{AdaBoost} sekošanas algoritms strādā gandrīz tik pat labi kā \textit{MIL} algoritms, brīžiem gan novērojami iztrūkumi, sekošanas laikā sekotājs brīžiem pazaudē objektu, bet ātri, pēc pāris kadriem, to atrod. Līdzīgi kā \textit{MIL} algoritmam, arī \textit{AdaBoost} netiek galā ar objektiem, kas video fragmentos novietojas aiz šķēršļiem, bet izpildes laikā ir ātrāks. Ja gala risinājumā nepieciešams izvēlēties starp \textit{MIL} un \textit{AdaBoost}, autors izvēlētos \textit{MIL}, jo, lai gan \textit{AdaBoost} ir nedaudz ātrāks, \textit{MIL} algoritms objektiem seko stabilāk.
 \begin{figure}[h]%
 	\centering
 	\includegraphics[height=6cm]{images/ssd7.png} %
@@ -95,36 +97,30 @@ Salīdzinot ar darba izstrādes laikā apmācīto \textit{SSD} objektu detektē�
 \newpage
 Attēlā 4.8. var novērot, ka sekojot rodas iztrūkumi un detektēšana ir darbojusies līdzīgi \textit{SSD} detektēšanas sistēmai. Attēlā 4.9. priekšplānā esošie cilvēki ir detektēti labāk kā \textit{SSD} sistēmai, taču fonā esošie netiek atrasti. Kā jau darbā minēts, \textit{YOLO} slikti detektē mazus objektus, kas varētu būt iemesls. Sekošanas algoritms attēlā 4.9. darbojas līdzīgi kā \textit{MIL} sekošanas algoritms, kur objekti, aizklājot citus, pārtvēra to ierobežojošos logus. 
 
-Tā kā video fragments attēlā 4.10. ir ļoti zemas izšķirtspējas, visi objekti ir salīdzinoši mazi, kas \textit{YOLO} sagādā lielas problēmas. Fona esošais objekts ir atrasts veiksmīgi, bet pārējie cilvēki, kas pārvietojas fonā tiek detektēti ļoti vāji.
+Tā kā video fragments attēlā 4.10. ir ļoti zemas izšķirtspējas, visi objekti ir salīdzinoši mazi, kas \textit{YOLO} sagādā lielas problēmas. Fona esošais objekts ir detektēts veiksmīgi, bet pārējie cilvēki, kas pārvietojas fonā tiek detektēti ļoti vāji.
 \chapter{Secinājumi un priekšlikumi}
 \paragraph{Secinājumi}
 \hfill\par
 \begin{enumerate}
-	\item Jaunākie risinājumi balss atpazīšanā, objektu klasifikācijā un objektu detektēšanā ir veidoti izmantojot dziļās mašīnmācīšanās metodes.
-	\item Konvolūcijas neironu tīkli vislabāk risina detektēšanas, segmentācijas un klasifikācijas problēmas.
-	\item \textit{VGG Net} konvolūcijas neironu tīklu arhitektūra ir labi optimizēta, lai nebūtu nepieciešami ļoti lieli skaitļošanas resursi, tai pat laikā atgriežot kvalitatīvus rezultātus.
-	\item Jo vairāk konvolūcijas slāņu (filtru) neironu tīklā, jo labāk šis tīkls veiks klasifikāciju, taču vairāk slāņu izmantošana nozīmē papildu skaitļošanas jaudas nepieciešamību.
+	\item Jaunākie risinājumi balss atpazīšanā, objektu klasifikācijā un objektu detektēšanā ir veidoti izmantojot dziļās mašīnmācīšanās metodes. Šos risinājumus veido izmantojot konvolūcijas neironu tīklus.
+	\item Jo vairāk konvolūcijas slāņu (filtru) neironu tīklā, jo labāk šis tīkls veiks klasifikāciju, taču vairāk slāņu izmantošana nozīmē papildu skaitļošanas jaudas nepieciešamību. Izveidot savu konvolūcijas neironu tīklu arhitektūru ir viegli, taču, lai to padarītu labāku par jau eksistējošajām arhitektūrām, ir nepieciešams ieguldīt daudz laika pētījumos un eksperimentos.
 	\item Lai efektīvi darbotos ar konvolūciju neironu tīkliem, apmācību ir nepieciešams veikt, izmantojot grafisko procesoru, kam ir daudz vairāk skaitļošanas vienības kā centrālajiem procesoriem.
 	\item Dotajā brīdī, \textit{ReLU} ir labākā konvolūciju neironu tīklos izmantotā aktivizācijas funkcija. 
-	\item Izveidot savu konvolūcijas neironu tīklu arhitektūru ir viegli, taču, lai to padarītu labāku par jau eksistējošajām arhitektūrām, ir nepieciešams ieguldīt daudz laika pētījumos un eksperimentos.
-	\item Izvēloties programmatūras ietvarus darbam ar konvolūcijas neironu tīkliem ir pieejami daudz varianti, taču, lai izvēlētos īsto ir svarīgs gala risinājuma mērķis. Piemēram, \textit{Caffe} ir speciāli veidots darbam ar konvolūcijas neironu tīkliem un \textit{darknet} satur oriģinālo \textit{YOLO} implementāciju. 
-	\item Uz reģionu priekšlikumiem balstītās detektēšanas metodes var efektīvi izmantot, ja apmācībai ir pieejamas ierīces ar augstu skaitļošanas jaudu.
-	\item \textit{YOLO} ir ļoti ātra objektu detektēšanas sistēma.
-	\item \textit{SSD} detektēšanas sistēma ir labākais detektēšanas precizitātes un ātruma kompromiss.
-	\item Izmantojot augstas izšķirtspējas attēlus, apmācības laikā, var uzlabot detektēšanas sistēmas veiktspēju, taču tiek upurēti skaitļošanas resursi.
-	\item Objektu sekošanas algoritmus ir nepieciešams implementēt, lai nepazaudētu objektu, kad detektēšanas sistēmas vairs nevar to atrast.
-	\item Jo lielāka apmācības datu kopa, jo dažādākus objektus detektēšanas sistēmas var atrast.
+	\item Izvēloties programmatūras ietvarus darbam ar konvolūcijas neironu tīkliem ir pieejami daudz varianti, taču, lai izvēlētos ietvaru ir svarīgs gala risinājuma mērķis un pielietojums. Piemēram, \textit{Caffe} ir speciāli veidots darbam ar konvolūcijas neironu tīkliem un \textit{darknet} satur oriģinālo \textit{YOLO} implementāciju. 
+	\item Izmantojot augstas izšķirtspējas attēlus, apmācības laikā, var uzlabot detektēšanas sistēmas veiktspēju, taču tiek upurēti skaitļošanas resursi. Jāņem vērā, ka veicot apmācību ar augstas izšķirtspējas attēliem, bet pēc tam veicot detektēšanu ļoti zemas izšķirtspējas attēliem, tā darbosies vāji.
+	\item Objektu sekošanas algoritmus ir nepieciešams implementēt, lai nepazaudētu objektu, kad detektēšanas sistēmas vairs nevar to atrast, kā arī sekošanas operācija tērē mazāk resursu kā detektēšana. No sekošanas algoritmu rezultātiem var analizēt objektu pārvietošanās trajektorijas.
+	\item Jo lielāka un daudzveidīgāka apmācības datu kopa, jo dažādākus objektus detektēšanas sistēmas var atrast.
 	\item Nepopulāras datu kopas (datu kopas, kas nav \textit{Pascal VOC, MS COCO, ILSVRC}) pielietotu ar populārākajiem konvolūcijas neironu tīklu programmatūras ietvariem, var nākties veikt datu pārveidojumus kā anotāciju formāta maiņu.
 	\item \textit{Python} programmēšanas valodā ir pieejamas daudz un dažādas datorredzes un mašīnmācīšanās programmatūras bibliotēkas. Šīs programmatūras bibliotēkas kā arī elementārā koda sintakse padara \textit{Python} programmēšanas valodu viegli izmantojamu, lai darbotos dziļās apmācības laukā.
-	\item Lai sasniegtu labākus detektēšanas sistēmu rezultātus, konvolūcijas neironu tīklu apmācība ir jāveic daudz ilgāk kā šī darba ietvaros.
+	\item Lai sasniegtu labākus detektēšanas sistēmu rezultātus, konvolūcijas neironu tīklu apmācība ir jāveic daudz ilgāk kā šī darba ietvaros kā arī jāveic datu uzlabošana (no angļu val \textit{data augmentation}).
 	\item \textit{AdaBoost} sekošanas algoritms darbojās ātrāk kā \textit{MIL}, taču \textit{MIL} algoritms uzrādīja labākus rezultātus.
 	\item Šī darba ietvaros praktiski implementētie sekošanas algoritmi nespēja atrast objektus, kad tie pazūd fonā aiz priekšplānā esošajiem objektiem.
-	\item Ja video fragments ir augstas izšķirtspējas un uzņemts ar kameru no paaugstināta skatu punkta, kur skaitīšanas līniju var novietot horizontāli un cilvēki pārvietojas vertikāli, tad, šī darba ietvaros izveidotais risinājums, teorētiski, būtu labi funkcionējošs.
+	\item Ja video fragments ir augstas izšķirtspējas un uzņemts ar kameru no paaugstināta skatu punkta, kur skaitīšanas līniju var novietot horizontāli, cilvēki pārvietojas vertikāli un apmācības dati atbilstu problēmai, tad, šī darba ietvaros izveidotais risinājums, teorētiski, būtu labi funkcionējošs.
 \end{enumerate}
 \paragraph{Priekšlikumi}
 \hfill\par
 \begin{enumerate}
-	\item Lai uzlabotu šī darba ietvaros izveidoto sistēmu, ir nepieciešams abas izmantotās detektēšanas sistēmas apmācīt ilgāk. Izmantotajā datu kopā ir vairāk kā 220 tūkstoš attēlu un šī darba ietvaros veiktās apmācības ilgums ir nepietiekams, lai iegūtu labākus rezultātus ar attēliem, kas nav no datu kopas.
-	\item Lai iegūtu labākus detektēšanas rezultātus un, pieņemot, ka ir pieejami neierobežoti skaitļošanas resursi, šī darba ietvaros \textit{VGG Net} konvolūcijas neironu tīklu arhitektūru būtu vērtīgi aizstāt ar \textit{ResNet} konvolūcijas neironu tīklu arhitektūru. \textit{ResNet} arhitektūra satur daudz vairāk slāņus un labāk detektē objektus, bet apmācība pieprasa augstu skaitļošanas jaudu. 
+	\item Lai uzlabotu šī darba ietvaros izveidoto sistēmu, ir nepieciešams abas izmantotās detektēšanas sistēmas apmācīt ilgāk un veikt datu uzlabošanu (no angļu val. \textit{data augmentation}). Izmantotajā datu kopā ir vairāk kā 220 tūkstoš attēlu un šī darba ietvaros veiktās apmācības ilgums ir nepietiekams, lai iegūtu labākus rezultātus ar attēliem, kas nav no datu kopas.
+	\item Lai iegūtu labākus detektēšanas rezultātus un, pieņemot, ka ir pieejami neierobežoti skaitļošanas resursi, šī darba ietvaros \textit{VGG Net} konvolūcijas neironu tīklu arhitektūru būtu vērtīgi aizstāt ar \textit{ResNet} konvolūcijas neironu tīklu arhitektūru. \textit{ResNet} arhitektūra satur daudz vairāk slāņus un labāk detektē objektus, bet apmācība pieprasa augstu skaitļošanas jaudu, ko nenodrošina darbā izmantotā grafiskā karte. 
 	\item Lai uzlabotu sekošanas algoritmu veiktspēju, var izmantot uz konvolūcijas neironu tīklu apmācību balstītus sekošanas algoritmus. Darbā minētais \textit{SiamFC} ir viena no šādām sistēmām, kuru gan darba izstrādes laikā neizdevās praktiski implementēt. Papildu detektēšanas sistēmu apmācībai, nākamais solis risinājuma izstrādē būtu pielietot \textit{SiamFC} sekošanas sistēmu. 
 \end{enumerate}

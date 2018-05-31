@@ -1,0 +1,7 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iclasses}\PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Itrain}  \PYG{o}{=} \PYG{n}{obj}\PYG{o}{/}\PYG{l+m+mi}{2012}\PYG{n}{\PYGZus{}train}\PYG{o}{.}\PYG{n}{txt}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ivalid}  \PYG{o}{=} \PYG{n}{obj}\PYG{o}{/}\PYG{l+m+mi}{2012}\PYG{n}{\PYGZus{}test}\PYG{o}{.}\PYG{n}{txt}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Inames} \PYG{o}{=} \PYG{n}{cfg}\PYG{o}{/}\PYG{n}{obj}\PYG{o}{.}\PYG{n}{names}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ibackup} \PYG{o}{=} \PYG{n}{backup}\PYG{o}{/}
+\end{Verbatim}

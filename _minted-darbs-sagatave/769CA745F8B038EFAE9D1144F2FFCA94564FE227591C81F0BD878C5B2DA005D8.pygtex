@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{roi} \PYG{o}{=} \PYG{n}{cv2}\PYG{o}{.}\PYG{n}{selectROI}\PYG{p}{(}\PYG{n}{firstFrame}\PYG{p}{,}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{line} \PYG{o}{=} \PYG{n}{cv2}\PYG{o}{.}\PYG{n}{selectROI}\PYG{p}{(}\PYG{n}{firstFrame}\PYG{p}{,}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{tracker} \PYG{o}{=} \PYG{n}{cv2}\PYG{o}{.}\PYG{n}{MultiTracker\PYGZus{}create}\PYG{p}{()}
+\PYG{k}{while}\PYG{p}{(}\PYG{n}{videoFile}\PYG{o}{.}\PYG{n}{isOpened}\PYG{p}{()):}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iret}\PYG{p}{,} \PYG{n}{frame} \PYG{o}{=} \PYG{n}{videoFile}\PYG{o}{.}\PYG{n}{read}\PYG{p}{()}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iresult} \PYG{o}{=} \PYG{n}{detection}\PYG{o}{.}\PYG{n}{detect}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{)}
+\end{Verbatim}
